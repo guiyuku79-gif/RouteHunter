@@ -35,6 +35,33 @@ public class DrawingManager : MonoBehaviour
     // 現在描画中か
     bool drawing = false;
 
+    void Start()
+    {
+        for (int i = 0; i < 9; i++)
+        {
+            LineRenderer Line = Instantiate(linePrefab);
+            Line.positionCount = 2;
+            Line.SetPosition(0, new Vector2(4.5f, -4f + i));
+            Line.SetPosition(1, new Vector2(-4.5f, -4f + i));
+            LineData newLine = new LineData(new Vector2(4.5f, -4f + i), new Vector2(-4.5f, -4f + i));
+            lines.Add(newLine);
+        }
+        for (int i = 0; i < 9; i++)
+        {
+            LineRenderer Line = Instantiate(linePrefab);
+            Line.positionCount = 2;
+            Line.SetPosition(0, new Vector2(-4f + i, 4.5f));
+            Line.SetPosition(1, new Vector2(-4f + i, -4.5f));
+            LineData newLine = new LineData(new Vector2(-4f + i, 4.5f), new Vector2(-4f + i, -4.5f));
+
+            foreach (LineData line in lines)
+            {
+                AddIntersections(getIntersection.GetLineLineIntersection(newLine, line));
+            }
+            lines.Add(newLine);
+        }
+    }
+
 
     void Update()
     {
