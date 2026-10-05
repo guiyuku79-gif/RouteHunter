@@ -18,8 +18,11 @@ public class DrawingManager : MonoBehaviour
     [SerializeField] Color32 lineColor;
 
     // 今までに描いた図形
-    List<LineData> lines = new();
-    List<CircleData> circles = new();
+    List<LineData> lineDataList = new();
+    List<CircleData> circleDataList = new();
+
+    //線そのものを管理
+    List<LineRenderer> lines = new();
 
     // 交点計算と交点一覧の管理
     GetIntersection getIntersection = new();
@@ -54,7 +57,7 @@ public class DrawingManager : MonoBehaviour
             Line.startColor = gridColor;
             Line.endColor = gridColor;
             LineData newLine = new LineData(new Vector2(4.5f, -4f + i), new Vector2(-4.5f, -4f + i));
-            lines.Add(newLine);
+            lineDataList.Add(newLine);
         }
         for (int i = 0; i < 9; i++)
         {
@@ -67,11 +70,11 @@ public class DrawingManager : MonoBehaviour
 
             LineData newLine = new LineData(new Vector2(-4f + i, 4.5f), new Vector2(-4f + i, -4.5f));
 
-            foreach (LineData line in lines)
+            foreach (LineData line in lineDataList)
             {
                 AddIntersections(getIntersection.GetLineLineIntersection(newLine, line));
             }
-            lines.Add(newLine);
+            lineDataList.Add(newLine);
         }
     }
 
@@ -114,6 +117,8 @@ public class DrawingManager : MonoBehaviour
             // 線分を作る
             currentLine = Instantiate(linePrefab);
 
+            lines.Add(currentLine);
+
             currentLine.positionCount = 2;
             currentLine.startColor = lineColor;
             currentLine.endColor = lineColor;
@@ -125,7 +130,7 @@ public class DrawingManager : MonoBehaviour
         {
             // 円を作る
             currentCircle = Instantiate(circlePrefab);
-
+            lines.Add(currentCircle);
             currentCircle.positionCount = circleSegments + 1;
             currentCircle.startColor = lineColor;
             currentCircle.endColor = lineColor;
@@ -170,19 +175,19 @@ public class DrawingManager : MonoBehaviour
             LineData newLine = new LineData(startPos, endPos);
 
             // 新しい線分と既存の線分
-            foreach (LineData line in lines)
+            foreach (LineData line in lineDataList)
             {
                 AddIntersections(getIntersection.GetLineLineIntersection(newLine, line));
             }
 
             // 新しい線分と既存の円
-            foreach (CircleData circle in circles)
+            foreach (CircleData circle in circleDataList)
             {
                 AddIntersections(getIntersection.GetLineCircleIntersections(newLine, circle));
             }
 
             // 線分を保存
-            lines.Add(newLine);
+            lineDataList.Add(newLine);
 
             currentLine = null;
 
@@ -198,21 +203,21 @@ public class DrawingManager : MonoBehaviour
             CircleData newCircle = new CircleData(startPos, radius);
 
             // 新しい円と既存の線分
-            foreach (LineData line in lines)
+            foreach (LineData line in lineDataList)
             {
                 AddIntersections(getIntersection.GetLineCircleIntersections(line, newCircle));
             }
 
 
             // 新しい円と既存の円
-            foreach (CircleData circle in circles)
+            foreach (CircleData circle in circleDataList)
             {
                 AddIntersections(getIntersection.GetCircleCircleIntersections(newCircle, circle));
             }
 
 
             // 円を保存
-            circles.Add(newCircle);
+            circleDataList.Add(newCircle);
 
             currentCircle = null;
         }
@@ -276,8 +281,15 @@ public class DrawingManager : MonoBehaviour
         return result;
     }
 
-    void Reset()
+    public void Reset()
     {
-        
+        foreach (LineRenderer lineRenderer in lines)
+        {
+            Destroy(lineRenderer.gameObject);
+        }
+        lines.Clear();
+        getIntersection.intersections.Clear();
+
+        CreateGrid();
     }
 }
