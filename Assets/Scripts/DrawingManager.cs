@@ -14,6 +14,9 @@ public class DrawingManager : MonoBehaviour
 
     [SerializeField] float snapRadius = 0.1f;
 
+    [SerializeField] Color32 gridColor;
+    [SerializeField] Color32 lineColor;
+
     // 今までに描いた図形
     List<LineData> lines = new();
     List<CircleData> circles = new();
@@ -43,6 +46,8 @@ public class DrawingManager : MonoBehaviour
             Line.positionCount = 2;
             Line.SetPosition(0, new Vector2(4.5f, -4f + i));
             Line.SetPosition(1, new Vector2(-4.5f, -4f + i));
+            Line.startColor = gridColor;
+            Line.endColor = gridColor;
             LineData newLine = new LineData(new Vector2(4.5f, -4f + i), new Vector2(-4.5f, -4f + i));
             lines.Add(newLine);
         }
@@ -52,6 +57,9 @@ public class DrawingManager : MonoBehaviour
             Line.positionCount = 2;
             Line.SetPosition(0, new Vector2(-4f + i, 4.5f));
             Line.SetPosition(1, new Vector2(-4f + i, -4.5f));
+            Line.startColor = gridColor;
+            Line.endColor = gridColor;
+
             LineData newLine = new LineData(new Vector2(-4f + i, 4.5f), new Vector2(-4f + i, -4.5f));
 
             foreach (LineData line in lines)
@@ -108,6 +116,8 @@ public class DrawingManager : MonoBehaviour
             currentLine = Instantiate(linePrefab);
 
             currentLine.positionCount = 2;
+            currentLine.startColor = lineColor;
+            currentLine.endColor = lineColor;
 
             currentLine.SetPosition(0, startPos);
             currentLine.SetPosition(1, startPos);
@@ -118,6 +128,8 @@ public class DrawingManager : MonoBehaviour
             currentCircle = Instantiate(circlePrefab);
 
             currentCircle.positionCount = circleSegments + 1;
+            currentCircle.startColor = lineColor;
+            currentCircle.endColor = lineColor;
 
             DrawCircle(currentCircle, startPos, 0);
         }
@@ -177,6 +189,8 @@ public class DrawingManager : MonoBehaviour
             lines.Add(newLine);
 
             currentLine = null;
+
+            Debug.Log($"線分の長さ{Vector2.Distance(startPos, endPos)}");
         }
         else
         {

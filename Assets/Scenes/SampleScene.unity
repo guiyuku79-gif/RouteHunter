@@ -166,6 +166,13 @@ MonoBehaviour:
   linePrefab: {fileID: 40997469115069886, guid: ff259088982e2b84a94319458c2dbc45, type: 3}
   circlePrefab: {fileID: 40997469115069886, guid: dc51e3f5fc974cc4185e3113f3a736a6, type: 3}
   circleSegments: 100
+  snapRadius: 0.1
+  gridColor:
+    serializedVersion: 2
+    rgba: 4286216826
+  lineColor:
+    serializedVersion: 2
+    rgba: 4280953386
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
