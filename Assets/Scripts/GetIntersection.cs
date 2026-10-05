@@ -6,7 +6,7 @@ public class GetIntersection
     const float ParallelEpsilon = 0.00001f;
     const float DuplicateEpsilon = 0.0001f;
 
-    readonly List<Vector2> intersections = new();
+    public List<Vector2> intersections = new();
 
     public IReadOnlyList<Vector2> Points => intersections;
 
@@ -90,7 +90,7 @@ public class GetIntersection
         return results;
     }
 
-    /// <summary>Adds a point unless an approximately equal intersection is already stored.</summary>
+
     public bool AddIntersection(Vector2 point)
     {
         foreach (Vector2 existing in intersections)
