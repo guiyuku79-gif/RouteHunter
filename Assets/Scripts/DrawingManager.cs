@@ -40,6 +40,11 @@ public class DrawingManager : MonoBehaviour
 
     void Start()
     {
+        CreateGrid();
+    }
+
+    void CreateGrid()
+    {
         for (int i = 0; i < 9; i++)
         {
             LineRenderer Line = Instantiate(linePrefab);
@@ -74,15 +79,10 @@ public class DrawingManager : MonoBehaviour
     void Update()
     {
         // Lキーで線分
-        if (Keyboard.current.lKey.wasPressedThisFrame)
-        {
-            drawingLine = true;
-        }
+        if (Keyboard.current.lKey.wasPressedThisFrame) drawingLine = true;
         // Cキーで円
-        if (Keyboard.current.cKey.wasPressedThisFrame)
-        {
-            drawingLine = false;
-        }
+        if (Keyboard.current.cKey.wasPressedThisFrame) drawingLine = false;
+
         // 描画開始
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
@@ -102,7 +102,6 @@ public class DrawingManager : MonoBehaviour
     }
 
 
-    // 描画開始
     void StartDrawing()
     {
         startPos = GetMouseWorldPosition();
@@ -135,7 +134,6 @@ public class DrawingManager : MonoBehaviour
         }
     }
 
-    // 描画中
     void UpdateDrawing()
     {
         Vector2 mousePos = GetMouseWorldPosition();
@@ -155,8 +153,6 @@ public class DrawingManager : MonoBehaviour
         }
     }
 
-
-    // 描画確定
     void FinishDrawing()
     {
         Vector2 endPos = GetMouseWorldPosition();
@@ -224,8 +220,6 @@ public class DrawingManager : MonoBehaviour
         Debug.Log("現在の交点数 : " + getIntersection.Points.Count);
     }
 
-
-    // 円を描画
     void DrawCircle(LineRenderer line, Vector2 center, float radius)
     {
         for (int i = 0; i <= circleSegments; i++)
@@ -239,7 +233,6 @@ public class DrawingManager : MonoBehaviour
             line.SetPosition(i, new Vector3(x, y, 0));
         }
     }
-
 
     void AddIntersections(List<Vector2> points)
     {
@@ -281,5 +274,10 @@ public class DrawingManager : MonoBehaviour
             }
         }
         return result;
+    }
+
+    void Reset()
+    {
+        
     }
 }
