@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class DrawingManager : MonoBehaviour
 {
@@ -16,6 +18,9 @@ public class DrawingManager : MonoBehaviour
 
     [SerializeField] Color32 gridColor;
     [SerializeField] Color32 lineColor;
+
+    [SerializeField] SpriteRenderer compassButton;
+    [SerializeField] SpriteRenderer lineButton;
 
     // 今までに描いた図形
     List<LineData> lineDataList = new();
@@ -44,6 +49,8 @@ public class DrawingManager : MonoBehaviour
     void Start()
     {
         CreateGrid();
+
+        LineMode();
     }
 
     void CreateGrid()
@@ -292,4 +299,21 @@ public class DrawingManager : MonoBehaviour
 
         CreateGrid();
     }
+
+    public void CompassMode()
+    {
+        drawingLine = false;
+
+        compassButton.color = Color.gray;
+        lineButton.color = Color.white;
+    }
+
+    public void LineMode()
+    {
+        drawingLine = true;
+        compassButton.color = Color.white;
+        lineButton.color = Color.gray;
+    }
+
+
 }
