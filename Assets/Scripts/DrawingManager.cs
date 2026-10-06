@@ -139,14 +139,15 @@ public class DrawingManager : MonoBehaviour
         startPos = GetMouseWorldPosition();
         startPos = Snap(startPos);
 
+        if (Mathf.Abs(startPos.x) > CampasWidth || Mathf.Abs(startPos.y) > CampasHeight) return;
+
         drawing = true;
 
         if (mode == Mode.Line)
         {
+
             // 線分を作る
             currentLine = Instantiate(linePrefab);
-
-            lines.Add(currentLine);
 
             currentLine.positionCount = 2;
             currentLine.startColor = lineColor;
@@ -161,7 +162,7 @@ public class DrawingManager : MonoBehaviour
         {
             // 円を作る
             currentCircle = Instantiate(circlePrefab);
-            lines.Add(currentCircle);
+
             currentCircle.positionCount = circleSegments + 1;
             currentCircle.startColor = lineColor;
             currentCircle.endColor = lineColor;
@@ -199,19 +200,19 @@ public class DrawingManager : MonoBehaviour
 
         drawing = false;
 
-        //範囲外の線は消す
-        if (Mathf.Abs(endPos.x) > CampasWidth || Mathf.Abs(endPos.y) > CampasHeight ||
-        Mathf.Abs(startPos.x) > CampasWidth || Mathf.Abs(startPos.y) > CampasHeight)
-        {
-            Destroy(currentLine.gameObject);
-            currentLine = null;
-            return;
-        }
+
 
         if (mode == Mode.Line)
         {
-            // 線分を確定
-
+            //範囲外の線は消す
+            if (Mathf.Abs(endPos.x) > CampasWidth || Mathf.Abs(endPos.y) > CampasHeight ||
+            Mathf.Abs(startPos.x) > CampasWidth || Mathf.Abs(startPos.y) > CampasHeight)
+            {
+                Destroy(currentLine.gameObject);
+                currentLine = null;
+                return;
+            }
+            lines.Add(currentLine);
             currentLine.SetPosition(0, startPos);
             currentLine.SetPosition(1, endPos);
 
@@ -238,7 +239,16 @@ public class DrawingManager : MonoBehaviour
         }
         else
         {
-            // 円を確定
+            //範囲外の線は消す
+            if (Mathf.Abs(endPos.x) > CampasWidth || Mathf.Abs(endPos.y) > CampasHeight ||
+            Mathf.Abs(startPos.x) > CampasWidth || Mathf.Abs(startPos.y) > CampasHeight)
+            {
+                Destroy(currentCircle.gameObject);
+                currentCircle = null;
+                return;
+            }
+
+            lines.Add(currentCircle);
             float radius;
             if (mode == Mode.FixedCompass) radius = fixedRadius;
             else radius = Vector2.Distance(startPos, endPos);
@@ -292,7 +302,7 @@ public class DrawingManager : MonoBehaviour
         {
             if (getIntersection.AddIntersection(point))
             {
-                Debug.Log("交点追加 : " + point);
+                //Debug.Log("交点追加 : " + point);
             }
         }
     }
