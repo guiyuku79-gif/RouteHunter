@@ -10,6 +10,7 @@ public class DrawingManager : MonoBehaviour
     [Header("Prefab")]
     [SerializeField] LineRenderer linePrefab;
     [SerializeField] LineRenderer circlePrefab;
+    [SerializeField] LineRenderer gridPrefab;
 
     [Header("Circle")]
     [SerializeField] int circleSegments = 100;
@@ -17,10 +18,14 @@ public class DrawingManager : MonoBehaviour
     [SerializeField] float snapRadius = 0.1f;
 
     [SerializeField] Color32 gridColor;
+    [SerializeField] float gridWidth = 0.03f;
     [SerializeField] Color32 lineColor;
+    [SerializeField] float lineWidth = 0.05f;
+
 
     [SerializeField] SpriteRenderer compassButton;
     [SerializeField] SpriteRenderer lineButton;
+    [SerializeField] SpriteRenderer fixedCompassButton;
 
     // 今までに描いた図形
     List<LineData> lineDataList = new();
@@ -40,11 +45,20 @@ public class DrawingManager : MonoBehaviour
 
     Vector2 startPos;
 
-    // trueなら線分、falseなら円
-    bool drawingLine = true;
+
+    //現在のモードを構造体にする
+    public enum Mode
+    {
+        Line,
+        Compass,
+        FixedCompass
+    }
+    public Mode mode;
 
     // 現在描画中か
     bool drawing = false;
+
+    float fixedRadius = 0;
 
     void Start()
     {
@@ -57,23 +71,28 @@ public class DrawingManager : MonoBehaviour
     {
         for (int i = 0; i < 9; i++)
         {
-            LineRenderer Line = Instantiate(linePrefab);
+            LineRenderer Line = Instantiate(gridPrefab);
             Line.positionCount = 2;
             Line.SetPosition(0, new Vector2(4.5f, -4f + i));
             Line.SetPosition(1, new Vector2(-4.5f, -4f + i));
             Line.startColor = gridColor;
             Line.endColor = gridColor;
+            Line.startWidth = gridWidth;
+            Line.endWidth = gridWidth;
+
             LineData newLine = new LineData(new Vector2(4.5f, -4f + i), new Vector2(-4.5f, -4f + i));
             lineDataList.Add(newLine);
         }
         for (int i = 0; i < 9; i++)
         {
-            LineRenderer Line = Instantiate(linePrefab);
+            LineRenderer Line = Instantiate(gridPrefab);
             Line.positionCount = 2;
             Line.SetPosition(0, new Vector2(-4f + i, 4.5f));
             Line.SetPosition(1, new Vector2(-4f + i, -4.5f));
             Line.startColor = gridColor;
             Line.endColor = gridColor;
+            Line.startWidth = gridWidth;
+            Line.endWidth = gridWidth;
 
             LineData newLine = new LineData(new Vector2(-4f + i, 4.5f), new Vector2(-4f + i, -4.5f));
 
@@ -89,9 +108,9 @@ public class DrawingManager : MonoBehaviour
     void Update()
     {
         // Lキーで線分
-        if (Keyboard.current.lKey.wasPressedThisFrame) drawingLine = true;
+        if (Keyboard.current.lKey.wasPressedThisFrame) LineMode();
         // Cキーで円
-        if (Keyboard.current.cKey.wasPressedThisFrame) drawingLine = false;
+        if (Keyboard.current.cKey.wasPressedThisFrame) CompassMode();
 
         // 描画開始
         if (Mouse.current.leftButton.wasPressedThisFrame)
@@ -119,7 +138,7 @@ public class DrawingManager : MonoBehaviour
 
         drawing = true;
 
-        if (drawingLine)
+        if (mode == Mode.Line)
         {
             // 線分を作る
             currentLine = Instantiate(linePrefab);
@@ -129,6 +148,8 @@ public class DrawingManager : MonoBehaviour
             currentLine.positionCount = 2;
             currentLine.startColor = lineColor;
             currentLine.endColor = lineColor;
+            currentLine.startWidth = lineWidth;
+            currentLine.endWidth = lineWidth;
 
             currentLine.SetPosition(0, startPos);
             currentLine.SetPosition(1, startPos);
@@ -141,6 +162,8 @@ public class DrawingManager : MonoBehaviour
             currentCircle.positionCount = circleSegments + 1;
             currentCircle.startColor = lineColor;
             currentCircle.endColor = lineColor;
+            currentCircle.startWidth = lineWidth;
+            currentCircle.endWidth = lineWidth;
 
             DrawCircle(currentCircle, startPos, 0);
         }
@@ -151,15 +174,16 @@ public class DrawingManager : MonoBehaviour
         Vector2 mousePos = GetMouseWorldPosition();
         mousePos = Snap(mousePos);
 
-        if (drawingLine)
+        if (mode == Mode.Line)
         {
             // 線分の終点を更新
             currentLine.SetPosition(1, mousePos);
         }
         else
         {
-            // 中心からマウスまでを半径にする
-            float radius = Vector2.Distance(startPos, mousePos);
+            float radius;
+            if (mode == Mode.FixedCompass) radius = fixedRadius;
+            else radius = Vector2.Distance(startPos, mousePos);
 
             DrawCircle(currentCircle, startPos, radius);
         }
@@ -172,7 +196,7 @@ public class DrawingManager : MonoBehaviour
 
         drawing = false;
 
-        if (drawingLine)
+        if (mode == Mode.Line)
         {
             // 線分を確定
 
@@ -203,7 +227,11 @@ public class DrawingManager : MonoBehaviour
         else
         {
             // 円を確定
-            float radius = Vector2.Distance(startPos, endPos);
+            float radius;
+            if (mode == Mode.FixedCompass) radius = fixedRadius;
+            else radius = Vector2.Distance(startPos, endPos);
+
+            fixedRadius = radius;
 
             DrawCircle(currentCircle, startPos, radius);
 
@@ -302,18 +330,25 @@ public class DrawingManager : MonoBehaviour
 
     public void CompassMode()
     {
-        drawingLine = false;
-
+        mode = Mode.Compass;
         compassButton.color = Color.gray;
         lineButton.color = Color.white;
+        fixedCompassButton.color = Color.white;
     }
 
     public void LineMode()
     {
-        drawingLine = true;
+        mode = Mode.Line;
         compassButton.color = Color.white;
         lineButton.color = Color.gray;
+        fixedCompassButton.color = Color.white;
     }
 
-
+    public void FixedCompassMode()
+    {
+        mode = Mode.FixedCompass;
+        compassButton.color = Color.white;
+        lineButton.color = Color.white;
+        fixedCompassButton.color = Color.gray;
+    }
 }

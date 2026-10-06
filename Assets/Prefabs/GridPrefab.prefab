@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7867139383790686167}
   - component: {fileID: 40997469115069886}
   m_Layer: 0
-  m_Name: LinePrefab
+  m_Name: GridPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,8 +77,8 @@ LineRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 2019177211
-  m_SortingLayer: 2
+  m_SortingLayerID: 190612781
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Positions:
