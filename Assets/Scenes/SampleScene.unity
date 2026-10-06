@@ -499,6 +499,8 @@ MonoBehaviour:
   compassButton: {fileID: 258650260}
   lineButton: {fileID: 1980127508}
   fixedCompassButton: {fileID: 253250659}
+  CampasWidth: 5
+  CampasHeight: 5
   mode: 0
 --- !u!1 &253250655
 GameObject:

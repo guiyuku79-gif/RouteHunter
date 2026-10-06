@@ -27,6 +27,9 @@ public class DrawingManager : MonoBehaviour
     [SerializeField] SpriteRenderer lineButton;
     [SerializeField] SpriteRenderer fixedCompassButton;
 
+    [SerializeField] float CampasWidth;
+    [SerializeField] float CampasHeight;
+
     // 今までに描いた図形
     List<LineData> lineDataList = new();
     List<CircleData> circleDataList = new();
@@ -196,6 +199,15 @@ public class DrawingManager : MonoBehaviour
 
         drawing = false;
 
+        //範囲外の線は消す
+        if (Mathf.Abs(endPos.x) > CampasWidth || Mathf.Abs(endPos.y) > CampasHeight ||
+        Mathf.Abs(startPos.x) > CampasWidth || Mathf.Abs(startPos.y) > CampasHeight)
+        {
+            Destroy(currentLine.gameObject);
+            currentLine = null;
+            return;
+        }
+
         if (mode == Mode.Line)
         {
             // 線分を確定
@@ -257,7 +269,7 @@ public class DrawingManager : MonoBehaviour
             currentCircle = null;
         }
 
-        Debug.Log("現在の交点数 : " + getIntersection.Points.Count);
+        //Debug.Log("現在の交点数 : " + getIntersection.Points.Count);
     }
 
     void DrawCircle(LineRenderer line, Vector2 center, float radius)
