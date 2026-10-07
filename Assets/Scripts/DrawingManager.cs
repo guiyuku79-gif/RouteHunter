@@ -86,32 +86,32 @@ public class DrawingManager : MonoBehaviour
 
     void CreateGrid()
     {
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < 8; i++)
         {
             LineRenderer Line = Instantiate(gridPrefab);
             Line.positionCount = 2;
-            Line.SetPosition(0, new Vector2(4.5f, -4f + i));
-            Line.SetPosition(1, new Vector2(-4.5f, -4f + i));
+            Line.SetPosition(0, new Vector2(5.5f, -4f + i));
+            Line.SetPosition(1, new Vector2(-7.5f, -4f + i));
             Line.startColor = gridColor;
             Line.endColor = gridColor;
             Line.startWidth = gridWidth;
             Line.endWidth = gridWidth;
 
-            LineData newLine = new LineData(new Vector2(4.5f, -4f + i), new Vector2(-4.5f, -4f + i));
+            LineData newLine = new LineData(new Vector2(5.5f, -4f + i), new Vector2(-7.5f, -4f + i));
             lineDataList.Add(newLine);
         }
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < 13; i++)
         {
             LineRenderer Line = Instantiate(gridPrefab);
             Line.positionCount = 2;
-            Line.SetPosition(0, new Vector2(-4f + i, 4.5f));
-            Line.SetPosition(1, new Vector2(-4f + i, -4.5f));
+            Line.SetPosition(0, new Vector2(-7f + i, 2.5f));
+            Line.SetPosition(1, new Vector2(-7f + i, -4.5f));
             Line.startColor = gridColor;
             Line.endColor = gridColor;
             Line.startWidth = gridWidth;
             Line.endWidth = gridWidth;
 
-            LineData newLine = new LineData(new Vector2(-4f + i, 4.5f), new Vector2(-4f + i, -4.5f));
+            LineData newLine = new LineData(new Vector2(-7f + i, 2.5f), new Vector2(-7f + i, -4.5f));
 
             foreach (LineData line in lineDataList)
             {
