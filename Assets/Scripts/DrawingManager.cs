@@ -68,6 +68,20 @@ public class DrawingManager : MonoBehaviour
         CreateGrid();
 
         LineMode();
+
+        Fraction fraction = new Fraction(
+            new List<Monomial>
+            {
+                new Monomial(number:1),
+                new Monomial(Coefficient:2,number:2,isRotted:true)
+            },
+            new List<Monomial>
+            {
+                new Monomial(number:1)
+            }
+        );
+        Debug.Log(fraction.FractionToString());
+        Debug.Log(fraction.ToFloat());
     }
 
     void CreateGrid()
