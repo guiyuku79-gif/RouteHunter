@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.Threading;
-using NUnit.Framework.Interfaces;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Monomial
@@ -38,9 +35,11 @@ public class Fraction
 {
     public List<Monomial> Denominator { get; private set; } //分母
     public List<Monomial> Numerator { get; private set; } //分子
-    public Fraction(List<Monomial> numerator, List<Monomial> denominator)
+    public Fraction(List<Monomial> numerator, List<Monomial> denominator = null)
     {
-        this.Denominator = denominator;
+        if (denominator == null) this.Denominator = new List<Monomial> { new Monomial() };
+        else this.Denominator = denominator;
+
         this.Numerator = numerator;
     }
 
@@ -71,5 +70,28 @@ public class Fraction
         float numeratorSum = 0;
         foreach (Monomial monomial in Numerator) numeratorSum += monomial.ToFloat();
         return numeratorSum / DenominatorSum;
+    }
+}
+
+public static class Question
+{
+    //レベルに応じた問題が作られる
+    public static Fraction CreateTargetNumber(int level)
+    {
+        switch (level)
+        {
+            case 1:
+                return new Fraction(numerator: new List<Monomial>
+                {
+                    new Monomial(number:Random.Range(1,10))
+                });
+            case 2:
+                return new Fraction(numerator: new List<Monomial>
+                {
+                    new Monomial(number:Random.Range(1,10),isRotted:true)
+                });
+        }
+
+        return new Fraction(numerator: new List<Monomial>{});
     }
 }

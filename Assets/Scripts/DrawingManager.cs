@@ -250,6 +250,7 @@ public class DrawingManager : MonoBehaviour
             currentLine = null;
 
             Debug.Log($"線分の長さ{Vector2.Distance(startPos, endPos)}");
+            GetComponent<QuestionManager>().CheckAnswer(Vector2.Distance(startPos, endPos));
         }
         else
         {
