@@ -27,8 +27,8 @@ public class DrawingManager : MonoBehaviour
     [SerializeField] SpriteRenderer lineButton;
     [SerializeField] SpriteRenderer fixedCompassButton;
 
-    [SerializeField] float CampasWidth;
-    [SerializeField] float CampasHeight;
+    [SerializeField] Vector2 CampasWidthRange;
+    [SerializeField] Vector2 CampasHeightRange;
 
     // 今までに描いた図形
     List<LineData> lineDataList = new();
@@ -80,7 +80,7 @@ public class DrawingManager : MonoBehaviour
                 new Monomial(number:1)
             }
         );
-        Debug.Log(fraction.FractionToString());
+        //Debug.Log(fraction.FractionToString());
         Debug.Log(fraction.ToFloat());
     }
 
@@ -153,7 +153,7 @@ public class DrawingManager : MonoBehaviour
         startPos = GetMouseWorldPosition();
         startPos = Snap(startPos);
 
-        if (Mathf.Abs(startPos.x) > CampasWidth || Mathf.Abs(startPos.y) > CampasHeight) return;
+        if (isLineOut(startPos)) return;
 
         drawing = true;
 
@@ -219,8 +219,7 @@ public class DrawingManager : MonoBehaviour
         if (mode == Mode.Line)
         {
             //範囲外の線は消す
-            if (Mathf.Abs(endPos.x) > CampasWidth || Mathf.Abs(endPos.y) > CampasHeight ||
-            Mathf.Abs(startPos.x) > CampasWidth || Mathf.Abs(startPos.y) > CampasHeight)
+            if (isLineOut(startPos) || isLineOut(endPos))
             {
                 Destroy(currentLine.gameObject);
                 currentLine = null;
@@ -255,8 +254,7 @@ public class DrawingManager : MonoBehaviour
         else
         {
             //範囲外の線は消す
-            if (Mathf.Abs(endPos.x) > CampasWidth || Mathf.Abs(endPos.y) > CampasHeight ||
-            Mathf.Abs(startPos.x) > CampasWidth || Mathf.Abs(startPos.y) > CampasHeight)
+            if (isLineOut(startPos) || isLineOut(endPos))
             {
                 Destroy(currentCircle.gameObject);
                 currentCircle = null;
@@ -295,6 +293,13 @@ public class DrawingManager : MonoBehaviour
         }
 
         //Debug.Log("現在の交点数 : " + getIntersection.Points.Count);
+    }
+
+    bool isLineOut(Vector2 position)
+    {
+        if (CampasWidthRange.x >= position.x || CampasWidthRange.y <= position.x) return true;
+        if (CampasHeightRange.x >= position.y || CampasHeightRange.y <= position.y) return true;
+        return false;
     }
 
     void DrawCircle(LineRenderer line, Vector2 center, float radius)

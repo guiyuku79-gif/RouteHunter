@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NUnit.Framework.Interfaces;
 using UnityEngine;
 
 public class Monomial
@@ -29,6 +30,16 @@ public class Monomial
         if (IsRooted) result = Mathf.Sqrt(result);
         return Coefficient * result;
     }
+
+    public float ToLength()
+    {
+        float result = 0;
+        if (Coefficient > 0) result += Coefficient.ToString().Length;
+        if (Coefficient < 0) result += Coefficient.ToString().Length - 1;
+        if (IsRooted) result += 0.5f;
+        result += Number.ToString().Length;
+        return result;
+    }
 }
 
 public class Fraction
@@ -43,25 +54,24 @@ public class Fraction
         this.Numerator = numerator;
     }
 
-    public string FractionToString()
+    public (string numerator, string denominator) FractionToString()
     {
-        string result = "(";
+        string result1 = "";
         for (int i = 0; i < Numerator.Count; i++)
         {
-            result += Numerator[i].MonomialToString();
-            result += " ";
-            if (i < Numerator.Count - 1 && Numerator[i + 1].Coefficient > 0) result += "+";
+            result1 += Numerator[i].MonomialToString();
+            result1 += " ";
+            if (i < Numerator.Count - 1 && Numerator[i + 1].Coefficient > 0) result1 += "+";
         }
-        result += ")/(";
+        string result2 = "";
         for (int i = 0; i < Denominator.Count; i++)
         {
-            result += Denominator[i].MonomialToString();
-            result += " ";
-            if (i < Denominator.Count - 1 && Denominator[i + 1].Coefficient > 0) result += "+";
+            result2 += Denominator[i].MonomialToString();
+            if (i < Denominator.Count - 1) result2 += " ";
+            if (i < Denominator.Count - 1 && Denominator[i + 1].Coefficient > 0) result2 += "+";
         }
-        result += ")";
 
-        return result;
+        return (result1, result2);
     }
     public float ToFloat()
     {
@@ -70,6 +80,24 @@ public class Fraction
         float numeratorSum = 0;
         foreach (Monomial monomial in Numerator) numeratorSum += monomial.ToFloat();
         return numeratorSum / DenominatorSum;
+    }
+
+    public (float denominatorLen, float numeratorLen) ToLength()
+    {
+        float denominatorLen = 0;
+        foreach (Monomial monomial in Denominator)
+        {
+            denominatorLen += monomial.ToLength();
+        }
+        denominatorLen += Denominator.Count - 1;
+        float numeratorLen = 0;
+        foreach (Monomial monomial in Numerator)
+        {
+            numeratorLen += monomial.ToLength();
+        }
+        numeratorLen += Numerator.Count - 1;
+
+        return (denominatorLen, numeratorLen);
     }
 }
 
@@ -92,6 +120,6 @@ public static class Question
                 });
         }
 
-        return new Fraction(numerator: new List<Monomial>{});
+        return new Fraction(numerator: new List<Monomial> { });
     }
 }

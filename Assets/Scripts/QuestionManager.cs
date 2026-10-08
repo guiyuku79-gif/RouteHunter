@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class QuestionManager : MonoBehaviour
@@ -9,6 +10,8 @@ public class QuestionManager : MonoBehaviour
     int stageLebel;
     List<Fraction> questions;
     List<bool> isSolved;
+
+    [SerializeField] GameObject boxPrefab;
 
     void Start()
     {
@@ -18,9 +21,11 @@ public class QuestionManager : MonoBehaviour
     {
         if (stageLebel <= 3) questions = CreateFourQuestions(new List<int> { 1, 1, 2, 2 });
         else questions = CreateFourQuestions(new List<int> { 1, 1, 1, 1 });
-        foreach (Fraction fraction in questions)
+        for (int i = 0; i < 4; i++)
         {
-            Debug.Log(fraction.FractionToString());
+            GameObject gameObject = Instantiate(boxPrefab);
+            gameObject.transform.position = new Vector3(-7f + 4 * i, 4f, 0);
+            gameObject.GetComponent<BoxManager>().Init(questions[i]);
         }
         isSolved = new List<bool> { false, false, false, false };
     }
