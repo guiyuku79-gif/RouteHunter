@@ -106,3 +106,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoxManager
   letterPrefab: {fileID: 8930048483194967759, guid: 0323551ba6907a24688b2a5ebbfd416c, type: 3}
+  linePrefab: {fileID: 40997469115069886, guid: 029c091843e0a1345a4e2f7ee3c8bd23, type: 3}

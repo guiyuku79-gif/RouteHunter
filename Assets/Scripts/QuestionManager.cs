@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
-using NUnit.Framework.Interfaces;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class QuestionManager : MonoBehaviour
@@ -19,7 +16,7 @@ public class QuestionManager : MonoBehaviour
     }
     void CreateNewQuestions()
     {
-        if (stageLebel <= 3) questions = CreateFourQuestions(new List<int> { 2, 3, 4, 5 });
+        if (stageLebel <= 3) questions = CreateFourQuestions(new List<int> { 3, 4, 5, 6 });
         else questions = CreateFourQuestions(new List<int> { 1, 1, 1, 1 });
         for (int i = 0; i < 4; i++)
         {
@@ -42,7 +39,7 @@ public class QuestionManager : MonoBehaviour
             {
                 isProblemed = false;
                 fraction = Question.CreateTargetNumber(levels[i]);
-                if (fraction.ToFloat() <= 0) isProblemed = true;
+                if (fraction.ToFloat() <= 0.1f) isProblemed = true;
                 if (fraction.ToFloat() >= 12) isProblemed = true;
                 if (privious.Contains(fraction.ToFloat())) isProblemed = true;
             }

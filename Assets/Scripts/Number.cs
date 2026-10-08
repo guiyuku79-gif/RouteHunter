@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.Data.Common;
-using NUnit.Framework.Interfaces;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Monomial
@@ -116,22 +113,22 @@ public static class Question
     {
         switch (level)
         {
-            case 1:
+            case 1://整数
                 return new Fraction(numerator: new List<Monomial>
                 {
                     new Monomial(number:Random.Range(1,10))
                 });
-            case 2:
+            case 2://√
                 return new Fraction(numerator: new List<Monomial>
                 {
                     new Monomial(number:Random.Range(1,10),isRotted:true)
                 });
-            case 3:
+            case 3://a√b
                 return new Fraction(numerator: new List<Monomial>
                 {
                     new Monomial(Coefficient:Random.Range(2,5),number:Random.Range(2,10),isRotted:true)
                 });
-            case 4:
+            case 4://
                 return new Fraction(numerator: new List<Monomial>
                 {
                     new Monomial(number:Random.Range(1,10),isRotted:true),
@@ -143,6 +140,18 @@ public static class Question
                     new Monomial(number:Random.Range(1,10),isRotted:true),
                     new Monomial(number:Random.Range(-1,-10)),
                 });
+            case 6:
+                return new Fraction(
+                    numerator: new List<Monomial>
+                    {
+                        new Monomial(number:Random.Range(1,10),isRotted:true),
+                        new Monomial(number:Random.Range(1,10),isRotted:true),
+                    },
+                    denominator: new List<Monomial>
+                    {
+                        new Monomial(number:Random.Range(2,10),isRotted:false),
+                    }
+                );
         }
 
         return new Fraction(numerator: new List<Monomial> { });
