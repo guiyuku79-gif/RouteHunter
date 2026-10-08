@@ -1,11 +1,14 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BoxManager : MonoBehaviour
 {
     private Fraction fraction;
     [SerializeField] GameObject letterPrefab;
     [SerializeField] LineRenderer linePrefab;
+
+    [SerializeField] Sprite closedBox;
 
     public void Init(Fraction fraction)
     {
@@ -46,5 +49,10 @@ public class BoxManager : MonoBehaviour
 
             if (str[i].ToString() == "√") isRooted = true;
         }
+    }
+
+    public void CloseBox()
+    {
+        GetComponent<SpriteRenderer>().sprite = closedBox;
     }
 }

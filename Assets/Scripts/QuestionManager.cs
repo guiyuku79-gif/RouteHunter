@@ -10,6 +10,8 @@ public class QuestionManager : MonoBehaviour
 
     [SerializeField] GameObject boxPrefab;
 
+    List<GameObject> boxex = new();
+
     void Start()
     {
         CreateNewQuestions();
@@ -23,6 +25,8 @@ public class QuestionManager : MonoBehaviour
             GameObject gameObject = Instantiate(boxPrefab);
             gameObject.transform.position = new Vector3(-7f + 4 * i, 4f, 0);
             gameObject.GetComponent<BoxManager>().Init(questions[i]);
+
+            boxex.Add(gameObject);
         }
         isSolved = new List<bool> { false, false, false, false };
     }
@@ -57,10 +61,11 @@ public class QuestionManager : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            if (Math.Abs(questions[i].ToFloat() - length) <= 0.005f)
+            if (Math.Abs(questions[i].ToFloat() - length) <= 0.005f & !isSolved[i])
             {
                 Debug.Log($"{i}番目の長さが完成");
                 isSolved[i] = true;
+                boxex[i].GetComponent<BoxManager>().CloseBox();
             }
         }
     }
