@@ -33,7 +33,8 @@ public class QuestionManager : MonoBehaviour
     List<Fraction> CreateFourQuestions(List<int> levels)
     {
         List<Fraction> results = new();
-        for(int i = 0; i < levels.Count; i++)
+        List<float> privious = new();
+        for (int i = 0; i < levels.Count; i++)
         {
             bool isProblemed = true;
             Fraction fraction = Question.CreateTargetNumber(1);
@@ -41,10 +42,12 @@ public class QuestionManager : MonoBehaviour
             {
                 isProblemed = false;
                 fraction = Question.CreateTargetNumber(levels[i]);
-                if(fraction.ToFloat() <= 0) isProblemed = true;
-                if(fraction.ToFloat() >= 12) isProblemed = true; 
+                if (fraction.ToFloat() <= 0) isProblemed = true;
+                if (fraction.ToFloat() >= 12) isProblemed = true;
+                if (privious.Contains(fraction.ToFloat())) isProblemed = true;
             }
             results.Add(fraction);
+            privious.Add(fraction.ToFloat());
         }
         foreach (int level in levels)
         {

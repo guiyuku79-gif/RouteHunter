@@ -129,7 +129,7 @@ public static class Question
             case 3:
                 return new Fraction(numerator: new List<Monomial>
                 {
-                    new Monomial(Coefficient:Random.Range(2,5),number:Random.Range(1,10),isRotted:true)
+                    new Monomial(Coefficient:Random.Range(2,5),number:Random.Range(2,10),isRotted:true)
                 });
             case 4:
                 return new Fraction(numerator: new List<Monomial>
