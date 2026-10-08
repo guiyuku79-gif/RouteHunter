@@ -4,69 +4,105 @@ using UnityEngine;
 
 public class QuestionManager : MonoBehaviour
 {
-    int stageLebel;
-    List<Fraction> questions;
-    List<bool> isSolved;
+    const int QuestionsPerStage = 4;
+    const float FirstBoxX = -7f;
+    const float BoxSpacing = 4f;
+    const float BoxY = 4f;
+    const float SpawnOffsetX = 18f;
+    const float AnswerTolerance = 0.005f;
 
     [SerializeField] GameObject boxPrefab;
 
-    List<GameObject> boxex = new();
+    int stageLevel = 1;
+    readonly List<BoxManager> boxes = new();
+    readonly List<Fraction> questions = new();
+    readonly bool[] solved = new bool[QuestionsPerStage];
 
     void Start()
     {
-        CreateNewQuestions();
-    }
-    void CreateNewQuestions()
-    {
-        if (stageLebel <= 3) questions = CreateFourQuestions(new List<int> { 3, 4, 5, 6 });
-        else questions = CreateFourQuestions(new List<int> { 1, 1, 1, 1 });
-        for (int i = 0; i < 4; i++)
-        {
-            GameObject gameObject = Instantiate(boxPrefab);
-            gameObject.transform.position = new Vector3(-7f + 4 * i, 4f, 0);
-            gameObject.GetComponent<BoxManager>().Init(questions[i]);
-
-            boxex.Add(gameObject);
-        }
-        isSolved = new List<bool> { false, false, false, false };
+        StartStage(spawnFromRight: false);
     }
 
-    List<Fraction> CreateFourQuestions(List<int> levels)
+    void StartStage(bool spawnFromRight)
     {
-        List<Fraction> results = new();
-        List<float> privious = new();
-        for (int i = 0; i < levels.Count; i++)
+        questions.Clear();
+        questions.AddRange(CreateQuestionsForStage());
+        Array.Clear(solved, 0, solved.Length);
+        boxes.Clear();
+
+        for (int i = 0; i < QuestionsPerStage; i++)
         {
-            bool isProblemed = true;
-            Fraction fraction = Question.CreateTargetNumber(1);
-            while (isProblemed)
-            {
-                isProblemed = false;
-                fraction = Question.CreateTargetNumber(levels[i]);
-                if (fraction.ToFloat() <= 0.1f) isProblemed = true;
-                if (fraction.ToFloat() >= 12) isProblemed = true;
-                if (privious.Contains(fraction.ToFloat())) isProblemed = true;
-            }
-            results.Add(fraction);
-            privious.Add(fraction.ToFloat());
+            float targetX = FirstBoxX + BoxSpacing * i;
+            float spawnX = spawnFromRight ? targetX + SpawnOffsetX : targetX;
+            GameObject boxObject = Instantiate(boxPrefab, new Vector3(spawnX, BoxY, 0f), Quaternion.identity);
+            BoxManager box = boxObject.GetComponent<BoxManager>();
+            box.Init(questions[i]);
+            boxes.Add(box);
+
+            if (spawnFromRight) box.ArriveBox();
         }
+    }
+
+    List<Fraction> CreateQuestionsForStage()
+    {
+        int[] levels;
+        if (stageLevel <= 3) levels = new[] { 1, 2, 3, 4 };
+        else levels = new[] { 1, 1, 2, 2 };
+
+
+        List<Fraction> result = new(QuestionsPerStage);
+        List<float> previousValues = new(QuestionsPerStage);
+
         foreach (int level in levels)
         {
-            results.Add(Question.CreateTargetNumber(level));
+            Fraction question;
+            float value;
+            do
+            {
+                question = Question.CreateTargetNumber(level);
+                value = question.ToFloat();
+            }
+            while (value <= 0.1f || value >= 12f || previousValues.Contains(value));
+
+            result.Add(question);
+            previousValues.Add(value);
         }
-        return results;
+
+        return result;
     }
 
     public void CheckAnswer(float length)
     {
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < QuestionsPerStage; i++)
         {
-            if (Math.Abs(questions[i].ToFloat() - length) <= 0.005f & !isSolved[i])
-            {
-                Debug.Log($"{i}番目の長さが完成");
-                isSolved[i] = true;
-                boxex[i].GetComponent<BoxManager>().CloseBox();
-            }
+            if (solved[i] || Math.Abs(questions[i].ToFloat() - length) > AnswerTolerance) continue;
+
+            Debug.Log($"{i}番目の長さが完成");
+            solved[i] = true;
+            boxes[i].CloseBox();
         }
+
+        if (AllQuestionsSolved()) AdvanceStage();
+    }
+
+    bool AllQuestionsSolved()
+    {
+        foreach (bool isSolved in solved)
+        {
+            if (!isSolved) return false;
+        }
+
+        return true;
+    }
+
+    void AdvanceStage()
+    {
+        foreach (BoxManager box in boxes)
+        {
+            if (box != null) box.RemoveBox();
+        }
+
+        stageLevel++;
+        StartStage(spawnFromRight: true);
     }
 }
