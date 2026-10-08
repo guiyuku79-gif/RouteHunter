@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Data.Common;
 using NUnit.Framework.Interfaces;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Monomial
@@ -18,7 +20,11 @@ public class Monomial
     public string MonomialToString()
     {
         string result = "";
-        if (Coefficient != 1) result = Coefficient.ToString();
+        if (Coefficient != 1)
+        {
+            if (Coefficient == -1) result += "-";
+            else result = Coefficient.ToString();
+        }
         if (IsRooted) result += "√";
         result += Number.ToString();
         return result;
@@ -60,15 +66,17 @@ public class Fraction
         for (int i = 0; i < Numerator.Count; i++)
         {
             result1 += Numerator[i].MonomialToString();
-            result1 += " ";
-            if (i < Numerator.Count - 1 && Numerator[i + 1].Coefficient > 0) result1 += "+";
+            //if (i < Numerator.Count - 1) result1 += " ";
+            if (i < Numerator.Count - 1 && Numerator[i + 1].Coefficient > 0 &&
+                Numerator[i + 1].Number > 0) result1 += "+";
         }
         string result2 = "";
         for (int i = 0; i < Denominator.Count; i++)
         {
             result2 += Denominator[i].MonomialToString();
-            if (i < Denominator.Count - 1) result2 += " ";
-            if (i < Denominator.Count - 1 && Denominator[i + 1].Coefficient > 0) result2 += "+";
+            //if (i < Denominator.Count - 1) result2 += " ";
+            if (i < Denominator.Count - 1 && Denominator[i + 1].Coefficient > 0 &&
+                Denominator[i + 1].Number > 0) result2 += "+";
         }
 
         return (result1, result2);
@@ -117,6 +125,23 @@ public static class Question
                 return new Fraction(numerator: new List<Monomial>
                 {
                     new Monomial(number:Random.Range(1,10),isRotted:true)
+                });
+            case 3:
+                return new Fraction(numerator: new List<Monomial>
+                {
+                    new Monomial(Coefficient:Random.Range(2,5),number:Random.Range(1,10),isRotted:true)
+                });
+            case 4:
+                return new Fraction(numerator: new List<Monomial>
+                {
+                    new Monomial(number:Random.Range(1,10),isRotted:true),
+                    new Monomial(number:Random.Range(1,10),isRotted:true),
+                });
+            case 5:
+                return new Fraction(numerator: new List<Monomial>
+                {
+                    new Monomial(number:Random.Range(1,10),isRotted:true),
+                    new Monomial(number:Random.Range(-1,-10)),
                 });
         }
 

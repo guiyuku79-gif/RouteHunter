@@ -19,7 +19,7 @@ public class QuestionManager : MonoBehaviour
     }
     void CreateNewQuestions()
     {
-        if (stageLebel <= 3) questions = CreateFourQuestions(new List<int> { 1, 1, 2, 2 });
+        if (stageLebel <= 3) questions = CreateFourQuestions(new List<int> { 2, 3, 4, 5 });
         else questions = CreateFourQuestions(new List<int> { 1, 1, 1, 1 });
         for (int i = 0; i < 4; i++)
         {
@@ -33,6 +33,19 @@ public class QuestionManager : MonoBehaviour
     List<Fraction> CreateFourQuestions(List<int> levels)
     {
         List<Fraction> results = new();
+        for(int i = 0; i < levels.Count; i++)
+        {
+            bool isProblemed = true;
+            Fraction fraction = Question.CreateTargetNumber(1);
+            while (isProblemed)
+            {
+                isProblemed = false;
+                fraction = Question.CreateTargetNumber(levels[i]);
+                if(fraction.ToFloat() <= 0) isProblemed = true;
+                if(fraction.ToFloat() >= 12) isProblemed = true; 
+            }
+            results.Add(fraction);
+        }
         foreach (int level in levels)
         {
             results.Add(Question.CreateTargetNumber(level));
@@ -44,7 +57,7 @@ public class QuestionManager : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            if (Math.Abs(questions[i].ToFloat() - length) <= 0.001f)
+            if (Math.Abs(questions[i].ToFloat() - length) <= 0.005f)
             {
                 Debug.Log($"{i}番目の長さが完成");
                 isSolved[i] = true;
