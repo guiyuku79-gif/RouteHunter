@@ -11,6 +11,7 @@ public class DrawingManager : MonoBehaviour
     [SerializeField] LineRenderer linePrefab;
     [SerializeField] LineRenderer circlePrefab;
     [SerializeField] LineRenderer gridPrefab;
+    [SerializeField] GameObject circleCenterPrefab;
 
     [Header("Circle")]
     [SerializeField] int circleSegments = 100;
@@ -36,6 +37,7 @@ public class DrawingManager : MonoBehaviour
 
     //線そのものを管理
     List<LineRenderer> lines = new();
+    List<GameObject> circleCenters = new();
 
     // 交点計算と交点一覧の管理
     GetIntersection getIntersection = new();
@@ -45,6 +47,8 @@ public class DrawingManager : MonoBehaviour
 
     // 現在描画中の円
     LineRenderer currentCircle;
+
+    GameObject currentCircleCenter;
 
     Vector2 startPos;
 
@@ -184,6 +188,10 @@ public class DrawingManager : MonoBehaviour
             currentCircle.endWidth = lineWidth;
 
             DrawCircle(currentCircle, startPos, 0);
+
+            currentCircleCenter = Instantiate(circleCenterPrefab);
+            currentCircleCenter.transform.position = startPos;
+
         }
     }
 
@@ -257,11 +265,14 @@ public class DrawingManager : MonoBehaviour
             if (isLineOut(startPos) || isLineOut(endPos))
             {
                 Destroy(currentCircle.gameObject);
+                Destroy(currentCircleCenter);
                 currentCircle = null;
+                currentCircleCenter = null;
                 return;
             }
 
             lines.Add(currentCircle);
+            circleCenters.Add(currentCircleCenter);
             float radius;
             if (mode == Mode.FixedCompass) radius = fixedRadius;
             else radius = Vector2.Distance(startPos, endPos);
@@ -365,6 +376,12 @@ public class DrawingManager : MonoBehaviour
             Destroy(lineRenderer.gameObject);
         }
         lines.Clear();
+        foreach (GameObject gameObject in circleCenters)
+        {
+            Destroy(gameObject);
+        }
+        circleCenters.Clear();
+
         getIntersection.intersections.Clear();
 
         CreateGrid();

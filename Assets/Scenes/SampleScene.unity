@@ -487,6 +487,7 @@ MonoBehaviour:
   linePrefab: {fileID: 40997469115069886, guid: ff259088982e2b84a94319458c2dbc45, type: 3}
   circlePrefab: {fileID: 40997469115069886, guid: dc51e3f5fc974cc4185e3113f3a736a6, type: 3}
   gridPrefab: {fileID: 40997469115069886, guid: a4734b92891a37b44b4fce38c969e708, type: 3}
+  circleCenterPrefab: {fileID: 7434594598418788833, guid: fef113d2215ee3c43b0fdf716cee14b0, type: 3}
   circleSegments: 100
   snapRadius: 0.1
   gridColor:
