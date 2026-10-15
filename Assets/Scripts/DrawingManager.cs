@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using NUnit.Framework.Interfaces;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -32,12 +31,13 @@ public class DrawingManager : MonoBehaviour
     [SerializeField] Vector2 CampasHeightRange;
 
     // 今までに描いた図形
-    List<LineData> lineDataList = new();
-    List<CircleData> circleDataList = new();
+    Dictionary<int, LineData> lineDataList = new();
+    Dictionary<int, CircleData> circleDataList = new();
 
     //線そのものを管理
-    List<LineRenderer> lines = new();
-    List<GameObject> circleCenters = new();
+    Dictionary<int, LineRenderer> lines = new();
+
+    Dictionary<int, GameObject> circleCenters = new();
 
     // 交点計算と交点一覧の管理
     GetIntersection getIntersection = new();
@@ -49,6 +49,8 @@ public class DrawingManager : MonoBehaviour
     LineRenderer currentCircle;
 
     GameObject currentCircleCenter;
+
+    int currentIndex = 0;
 
     Vector2 startPos;
 
@@ -73,23 +75,12 @@ public class DrawingManager : MonoBehaviour
 
         LineMode();
 
-        Fraction fraction = new Fraction(
-            new List<Monomial>
-            {
-                new Monomial(number:1),
-                new Monomial(Coefficient:2,number:2,isRotted:true)
-            },
-            new List<Monomial>
-            {
-                new Monomial(number:1)
-            }
-        );
-        //Debug.Log(fraction.FractionToString());
-        Debug.Log(fraction.ToFloat());
+
     }
 
     void CreateGrid()
     {
+        currentIndex = 0;
         for (int i = 0; i < 8; i++)
         {
             LineRenderer Line = Instantiate(gridPrefab);
@@ -102,7 +93,9 @@ public class DrawingManager : MonoBehaviour
             Line.endWidth = gridWidth;
 
             LineData newLine = new LineData(new Vector2(5.5f, -4f + i), new Vector2(-7.5f, -4f + i));
-            lineDataList.Add(newLine);
+            currentIndex++;
+            lineDataList.Add(currentIndex, newLine);
+
         }
         for (int i = 0; i < 13; i++)
         {
@@ -117,11 +110,13 @@ public class DrawingManager : MonoBehaviour
 
             LineData newLine = new LineData(new Vector2(-7f + i, 2.5f), new Vector2(-7f + i, -4.5f));
 
-            foreach (LineData line in lineDataList)
+            foreach (LineData line in lineDataList.Values)
             {
                 AddIntersections(getIntersection.GetLineLineIntersection(newLine, line));
             }
-            lineDataList.Add(newLine);
+            currentIndex++;
+            lineDataList.Add(currentIndex, newLine);
+
         }
     }
 
@@ -132,6 +127,8 @@ public class DrawingManager : MonoBehaviour
         if (Keyboard.current.lKey.wasPressedThisFrame) LineMode();
         // Cキーで円
         if (Keyboard.current.cKey.wasPressedThisFrame) CompassMode();
+
+        if (Keyboard.current.zKey.wasPressedThisFrame) Undo();
 
         // 描画開始
         if (Mouse.current.leftButton.wasPressedThisFrame)
@@ -233,26 +230,29 @@ public class DrawingManager : MonoBehaviour
                 currentLine = null;
                 return;
             }
-            lines.Add(currentLine);
+            currentIndex++;
+
+            lines.Add(currentIndex, currentLine);
             currentLine.SetPosition(0, startPos);
             currentLine.SetPosition(1, endPos);
 
             LineData newLine = new LineData(startPos, endPos);
 
             // 新しい線分と既存の線分
-            foreach (LineData line in lineDataList)
+            foreach (LineData line in lineDataList.Values)
             {
                 AddIntersections(getIntersection.GetLineLineIntersection(newLine, line));
             }
 
             // 新しい線分と既存の円
-            foreach (CircleData circle in circleDataList)
+            foreach (CircleData circle in circleDataList.Values)
             {
                 AddIntersections(getIntersection.GetLineCircleIntersections(newLine, circle));
             }
 
             // 線分を保存
-            lineDataList.Add(newLine);
+            lineDataList.Add(currentIndex, newLine);
+
 
             currentLine = null;
 
@@ -270,9 +270,10 @@ public class DrawingManager : MonoBehaviour
                 currentCircleCenter = null;
                 return;
             }
+            currentIndex++;
 
-            lines.Add(currentCircle);
-            circleCenters.Add(currentCircleCenter);
+            lines.Add(currentIndex, currentCircle);
+            circleCenters.Add(currentIndex, currentCircleCenter);
             float radius;
             if (mode == Mode.FixedCompass) radius = fixedRadius;
             else radius = Vector2.Distance(startPos, endPos);
@@ -284,26 +285,26 @@ public class DrawingManager : MonoBehaviour
             CircleData newCircle = new CircleData(startPos, radius);
 
             // 新しい円と既存の線分
-            foreach (LineData line in lineDataList)
+            foreach (LineData line in lineDataList.Values)
             {
                 AddIntersections(getIntersection.GetLineCircleIntersections(line, newCircle));
             }
 
 
             // 新しい円と既存の円
-            foreach (CircleData circle in circleDataList)
+            foreach (CircleData circle in circleDataList.Values)
             {
                 AddIntersections(getIntersection.GetCircleCircleIntersections(newCircle, circle));
             }
 
 
             // 円を保存
-            circleDataList.Add(newCircle);
+            circleDataList.Add(currentIndex, newCircle);
+
 
             currentCircle = null;
         }
 
-        //Debug.Log("現在の交点数 : " + getIntersection.Points.Count);
     }
 
     bool isLineOut(Vector2 position)
@@ -331,7 +332,7 @@ public class DrawingManager : MonoBehaviour
     {
         foreach (Vector2 point in points)
         {
-            if (getIntersection.AddIntersection(point))
+            if (getIntersection.AddIntersection(currentIndex, point))
             {
                 //Debug.Log("交点追加 : " + point);
             }
@@ -359,11 +360,11 @@ public class DrawingManager : MonoBehaviour
     Vector2 Snap(Vector2 pos)
     {
         Vector2 result = pos;
-        foreach (Vector2 interSection in getIntersection.intersections)
+        foreach (var interSection in getIntersection.intersections)
         {
-            if (Vector2.Distance(pos, interSection) <= snapRadius)
+            if (Vector2.Distance(pos, interSection.point) <= snapRadius)
             {
-                result = interSection;
+                result = interSection.point;
             }
         }
         return result;
@@ -371,20 +372,44 @@ public class DrawingManager : MonoBehaviour
 
     public void Reset()
     {
-        foreach (LineRenderer lineRenderer in lines)
+        foreach (LineRenderer lineRenderer in lines.Values)
         {
             Destroy(lineRenderer.gameObject);
         }
         lines.Clear();
-        foreach (GameObject gameObject in circleCenters)
+        foreach (GameObject gameObject in circleCenters.Values)
         {
             Destroy(gameObject);
         }
         circleCenters.Clear();
 
+
+        lineDataList.Clear();
+        circleDataList.Clear();
         getIntersection.intersections.Clear();
 
         CreateGrid();
+    }
+
+    public void Undo()
+    {
+        if (currentIndex <= 21) return;
+        if (lineDataList.ContainsKey(currentIndex))
+        {
+            lineDataList.Remove(currentIndex);
+        }
+        else
+        {
+            circleDataList.Remove(currentIndex);
+            Destroy(circleCenters[currentIndex]);
+            circleCenters.Remove(currentIndex);
+        }
+
+        Destroy(lines[currentIndex].gameObject);
+        lines.Remove(currentIndex);
+
+        getIntersection.UndoIntersection(currentIndex);
+        currentIndex--;
     }
 
     public void CompassMode()

@@ -6,9 +6,8 @@ public class GetIntersection
     const float ParallelEpsilon = 0.00001f;
     const float DuplicateEpsilon = 0.0001f;
 
-    public List<Vector2> intersections = new();
+    public List<(int id, Vector2 point)> intersections = new();
 
-    public IReadOnlyList<Vector2> Points => intersections;
 
     public List<Vector2> GetLineLineIntersection(LineData line1, LineData line2)
     {
@@ -91,15 +90,26 @@ public class GetIntersection
     }
 
 
-    public bool AddIntersection(Vector2 point)
+    public bool AddIntersection(int currentIndex, Vector2 point)
     {
-        foreach (Vector2 existing in intersections)
+        foreach (var existing in intersections)
         {
-            if (Approximately(existing, point)) return false;
+            if (Approximately(existing.point, point)) return false;
         }
 
-        intersections.Add(point);
+        intersections.Add((currentIndex, point));
         return true;
+    }
+
+    public void UndoIntersection(int currentIndex)
+    {
+        for (int i = intersections.Count - 1; i >= 0; i--)
+        {
+            if (intersections[i].id == currentIndex)
+            {
+                intersections.RemoveAt(i);
+            }
+        }
     }
 
     static bool Approximately(Vector2 a, Vector2 b)
