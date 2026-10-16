@@ -71,18 +71,22 @@ public class QuestionManager : MonoBehaviour
         return result;
     }
 
-    public void CheckAnswer(float length)
+    public bool CheckAnswer(float length)
     {
+        bool isCompleted = false;
         for (int i = 0; i < QuestionsPerStage; i++)
         {
             if (solved[i] || Math.Abs(questions[i].ToFloat() - length) > AnswerTolerance) continue;
 
             Debug.Log($"{i}番目の長さが完成");
+            isCompleted = true;
             solved[i] = true;
             boxes[i].CloseBox();
         }
 
         if (AllQuestionsSolved()) AdvanceStage();
+
+        return isCompleted;
     }
 
     bool AllQuestionsSolved()

@@ -50,6 +50,7 @@ public class DrawingManager : MonoBehaviour
 
     GameObject currentCircleCenter;
 
+    // 線のIdを決める
     int currentIndex = 0;
 
     Vector2 startPos;
@@ -71,6 +72,8 @@ public class DrawingManager : MonoBehaviour
 
     //現在の手数
     int currentMoves = 0;
+    //直近で線が完成したときの手数
+    int priviousCompleteMoves = 0;
 
     void Start()
     {
@@ -80,6 +83,7 @@ public class DrawingManager : MonoBehaviour
 
         currentMoves = 0;
         moveUI.text = $"{0} moves";
+
     }
 
     void CreateGrid()
@@ -257,10 +261,12 @@ public class DrawingManager : MonoBehaviour
 
 
             currentLine = null;
-            currentMoves++;
-            Debug.Log($"線分の長さ{Vector2.Distance(startPos, endPos)}");
-            GetComponent<QuestionManager>().CheckAnswer(Vector2.Distance(startPos, endPos));
 
+            Debug.Log($"線分の長さ{Vector2.Distance(startPos, endPos)}");
+            bool isCompleted = GetComponent<QuestionManager>().CheckAnswer(Vector2.Distance(startPos, endPos));
+            if (isCompleted) priviousCompleteMoves = currentIndex;
+
+            currentMoves++;
         }
         else
         {
@@ -386,6 +392,8 @@ public class DrawingManager : MonoBehaviour
     public void Undo()
     {
         if (currentIndex <= 21) return;
+
+        if (currentIndex <= priviousCompleteMoves) return;
         if (lineDataList.ContainsKey(currentIndex))
         {
             lineDataList.Remove(currentIndex);
