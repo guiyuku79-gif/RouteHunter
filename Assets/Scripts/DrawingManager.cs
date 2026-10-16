@@ -27,6 +27,8 @@ public class DrawingManager : MonoBehaviour
     [SerializeField] SpriteRenderer lineButton;
     [SerializeField] SpriteRenderer fixedCompassButton;
 
+    [SerializeField] TextMeshProUGUI moveUI;
+
     [SerializeField] Vector2 CampasWidthRange;
     [SerializeField] Vector2 CampasHeightRange;
 
@@ -69,13 +71,17 @@ public class DrawingManager : MonoBehaviour
 
     float fixedRadius = 0;
 
+    //現在の手数
+    int currentMoves = 0;
+
     void Start()
     {
         CreateGrid();
 
         LineMode();
 
-
+        currentMoves = 0;
+        moveUI.text = $"{0} moves";
     }
 
     void CreateGrid()
@@ -255,9 +261,10 @@ public class DrawingManager : MonoBehaviour
 
 
             currentLine = null;
-
+            currentMoves++;
             Debug.Log($"線分の長さ{Vector2.Distance(startPos, endPos)}");
             GetComponent<QuestionManager>().CheckAnswer(Vector2.Distance(startPos, endPos));
+
         }
         else
         {
@@ -303,8 +310,10 @@ public class DrawingManager : MonoBehaviour
 
 
             currentCircle = null;
+            currentMoves++;
         }
 
+        moveUI.text = $"{currentMoves} moves";
     }
 
     bool isLineOut(Vector2 position)
@@ -410,6 +419,8 @@ public class DrawingManager : MonoBehaviour
 
         getIntersection.UndoIntersection(currentIndex);
         currentIndex--;
+        currentMoves--;
+        moveUI.text = $"{currentMoves} moves";
     }
 
     public void CompassMode()
