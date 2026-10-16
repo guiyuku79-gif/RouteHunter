@@ -6,6 +6,8 @@ public class GetIntersection
     const float ParallelEpsilon = 0.00001f;
     const float DuplicateEpsilon = 0.0001f;
 
+    const float SnapRadius = 0.1f;
+
     public List<(int id, Vector2 point)> intersections = new();
 
 
@@ -125,6 +127,22 @@ public class GetIntersection
     static float Cross(Vector2 a, Vector2 b)
     {
         return a.x * b.y - a.y * b.x;
+    }
+
+    public Vector2 Snap(Vector2 pos)
+    {
+        Vector2 result = pos;
+        float minDis = float.MaxValue;
+        foreach (var interSection in intersections)
+        {
+            float distance = Vector2.Distance(pos, interSection.point);
+            if (distance <= SnapRadius && distance <= minDis)
+            {
+                result = interSection.point;
+                minDis = distance;
+            }
+        }
+        return result;
     }
 }
 

@@ -15,8 +15,6 @@ public class DrawingManager : MonoBehaviour
     [Header("Circle")]
     [SerializeField] int circleSegments = 100;
 
-    [SerializeField] float snapRadius = 0.1f;
-
     [SerializeField] Color32 gridColor;
     [SerializeField] float gridWidth = 0.03f;
     [SerializeField] Color32 lineColor;
@@ -144,9 +142,7 @@ public class DrawingManager : MonoBehaviour
 
         if (drawing)
         {
-            // マウスを動かしている間
             UpdateDrawing();
-            // マウスを離したら確定
             if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
                 FinishDrawing();
@@ -158,7 +154,7 @@ public class DrawingManager : MonoBehaviour
     void StartDrawing()
     {
         startPos = GetMouseWorldPosition();
-        startPos = Snap(startPos);
+        startPos = getIntersection.Snap(startPos);
 
         if (isLineOut(startPos)) return;
 
@@ -201,7 +197,7 @@ public class DrawingManager : MonoBehaviour
     void UpdateDrawing()
     {
         Vector2 mousePos = GetMouseWorldPosition();
-        mousePos = Snap(mousePos);
+        mousePos = getIntersection.Snap(mousePos);
 
         if (mode == Mode.Line)
         {
@@ -221,7 +217,7 @@ public class DrawingManager : MonoBehaviour
     void FinishDrawing()
     {
         Vector2 endPos = GetMouseWorldPosition();
-        endPos = Snap(endPos);
+        endPos = getIntersection.Snap(endPos);
 
         drawing = false;
 
@@ -364,19 +360,6 @@ public class DrawingManager : MonoBehaviour
             );
 
         return new Vector2(worldPosition.x, worldPosition.y);
-    }
-
-    Vector2 Snap(Vector2 pos)
-    {
-        Vector2 result = pos;
-        foreach (var interSection in getIntersection.intersections)
-        {
-            if (Vector2.Distance(pos, interSection.point) <= snapRadius)
-            {
-                result = interSection.point;
-            }
-        }
-        return result;
     }
 
     public void Reset()
