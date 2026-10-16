@@ -106,6 +106,7 @@ public class QuestionManager : MonoBehaviour
             if (box != null) box.RemoveBox();
         }
 
+        GetComponent<DrawingManager>().Reset();
         stageLevel++;
         StartStage(spawnFromRight: true);
     }
