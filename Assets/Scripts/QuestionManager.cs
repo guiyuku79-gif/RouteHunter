@@ -13,7 +13,7 @@ public class QuestionManager : MonoBehaviour
 
     [SerializeField] GameObject boxPrefab;
 
-    int stageLevel = 1;
+    public int stageLevel = 1;
     readonly List<BoxManager> boxes = new();
     readonly List<Fraction> questions = new();
     readonly bool[] solved = new bool[QuestionsPerStage];
@@ -45,9 +45,7 @@ public class QuestionManager : MonoBehaviour
 
     List<Fraction> CreateQuestionsForStage()
     {
-        int[] levels;
-        if (stageLevel <= 3) levels = new[] { 1, 2, 3, 4 };
-        else levels = new[] { 1, 1, 2, 2 };
+        int[] levels = Question.Levels(stageLevel);
 
 
         List<Fraction> result = new(QuestionsPerStage);

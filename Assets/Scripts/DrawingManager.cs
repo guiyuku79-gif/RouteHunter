@@ -82,7 +82,7 @@ public class DrawingManager : MonoBehaviour
         LineMode();
 
         currentMoves = 0;
-        moveUI.text = $"{0} moves";
+        updateMoveUI();
 
     }
 
@@ -315,7 +315,7 @@ public class DrawingManager : MonoBehaviour
             currentMoves++;
         }
 
-        moveUI.text = $"{currentMoves} moves";
+        updateMoveUI();
     }
 
     bool isLineOut(Vector2 position)
@@ -411,7 +411,7 @@ public class DrawingManager : MonoBehaviour
         getIntersection.UndoIntersection(currentIndex);
         currentIndex--;
         currentMoves--;
-        moveUI.text = $"{currentMoves} moves";
+        updateMoveUI();
     }
 
     public void CompassMode()
@@ -436,5 +436,13 @@ public class DrawingManager : MonoBehaviour
         compassButton.color = Color.white;
         lineButton.color = Color.white;
         fixedCompassButton.color = Color.gray;
+    }
+
+    void updateMoveUI()
+    {
+        int[] levels = Question.Levels(GetComponent<QuestionManager>().stageLevel);
+        int sum = 0;
+        foreach (int level in levels) sum += level;
+        moveUI.text = $"{currentMoves} moves\ntargetMoves {sum}";
     }
 }

@@ -108,6 +108,19 @@ public class Fraction
 
 public static class Question
 {
+
+    //レベル別の目標手数
+    public static Dictionary<int, int> targetMoves = new Dictionary<int, int>
+    {
+        {1,2},{2,3},{3,3},{4,4}
+    };
+
+    public static int[] Levels(int level)
+    {
+        if (level <= 3) return new[] { 1, 2, 3, 4 };
+        else return new[] { 1, 1, 2, 2 };
+    }
+
     //レベルに応じた問題が作られる
     public static Fraction CreateTargetNumber(int level)
     {
