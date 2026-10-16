@@ -121,18 +121,18 @@ public static class Question
             case 2://√
                 return new Fraction(numerator: new List<Monomial>
                 {
-                    new Monomial(number:Random.Range(1,10),isRotted:true)
+                    new Monomial(number:ChooseRootNumber(1,10),isRotted:true)
                 });
             case 3://a√b
                 return new Fraction(numerator: new List<Monomial>
                 {
-                    new Monomial(Coefficient:Random.Range(2,5),number:Random.Range(2,10),isRotted:true)
+                    new Monomial(Coefficient:Random.Range(2,5),number:ChooseRootNumber(1,10),isRotted:true)
                 });
             case 4://
                 return new Fraction(numerator: new List<Monomial>
                 {
-                    new Monomial(number:Random.Range(1,10),isRotted:true),
-                    new Monomial(number:Random.Range(1,10),isRotted:true),
+                    new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
+                    new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
                 });
             case 5:
                 return new Fraction(numerator: new List<Monomial>
@@ -149,11 +149,22 @@ public static class Question
                     },
                     denominator: new List<Monomial>
                     {
-                        new Monomial(number:Random.Range(2,10),isRotted:false),
+                        new Monomial(number:Random.Range(2,6),isRotted:false),
                     }
                 );
         }
 
         return new Fraction(numerator: new List<Monomial> { });
+    }
+
+    static List<int> rootInNumbers = new List<int> { 2, 3, 5, 6, 7, 10, 11, 13, 14, 15, 17, 19, 21, 22, 23, 26, 29 };
+    static int ChooseRootNumber(int min, int max)
+    {
+        List<int> numbers = new();
+        foreach (int num in rootInNumbers)
+        {
+            if (min <= num && num <= max) numbers.Add(num);
+        }
+        return numbers[Random.Range(1, numbers.Count - 1)];
     }
 }
