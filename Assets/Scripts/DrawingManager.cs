@@ -386,6 +386,7 @@ public class DrawingManager : MonoBehaviour
         circleDataList.Clear();
         getIntersection.intersections.Clear();
 
+        priviousCompleteMoves = 0;
         CreateGrid();
     }
 
