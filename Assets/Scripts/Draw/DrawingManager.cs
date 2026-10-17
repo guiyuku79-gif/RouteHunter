@@ -20,8 +20,6 @@ public class DrawingManager : MonoBehaviour
     [SerializeField] Vector2 CampasWidthRange;
     [SerializeField] Vector2 CampasHeightRange;
 
-    DrawingData drawingData = new();
-
     // 現在描画中の線分
     LineRenderer currentLine;
 
@@ -49,10 +47,12 @@ public class DrawingManager : MonoBehaviour
 
     //ほかのmanager
     UIManager uiManager;
+    DrawingData drawingData;
 
     void Start()
     {
         uiManager = GetComponent<UIManager>();
+        drawingData = GetComponent<DrawingData>();
 
         CreateGrid();
         LineMode();
@@ -65,7 +65,8 @@ public class DrawingManager : MonoBehaviour
 
     void CreateGrid()
     {
-        drawingData.AddIntersections(GetComponent<GridGenerator>().GenerateGrid(), 0);
+        var gridLines = GetComponent<GridGenerator>().GenerateGrid();
+        drawingData.GridData(gridLines.intersections, gridLines.lines);
     }
 
     void Update()

@@ -109,4 +109,13 @@ public class DrawingData : MonoBehaviour
 
         getIntersection.UndoIntersection(currentIndex);
     }
+
+    public void GridData(List<Vector2> intersections, List<LineData> lines)
+    {
+        AddIntersections(intersections, -1);
+        for (int i = 0; i < lines.Count; i++)
+        {
+            lineDataList.Add(-i, lines[i]);
+        }
+    }
 }

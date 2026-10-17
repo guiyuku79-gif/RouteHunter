@@ -450,6 +450,7 @@ GameObject:
   m_Component:
   - component: {fileID: 106621514}
   - component: {fileID: 106621515}
+  - component: {fileID: 106621519}
   - component: {fileID: 106621516}
   - component: {fileID: 106621517}
   - component: {fileID: 106621518}
@@ -489,13 +490,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DrawingManager
   linePrefab: {fileID: 40997469115069886, guid: ff259088982e2b84a94319458c2dbc45, type: 3}
   circlePrefab: {fileID: 40997469115069886, guid: dc51e3f5fc974cc4185e3113f3a736a6, type: 3}
-  gridPrefab: {fileID: 40997469115069886, guid: a4734b92891a37b44b4fce38c969e708, type: 3}
   circleCenterPrefab: {fileID: 7434594598418788833, guid: fef113d2215ee3c43b0fdf716cee14b0, type: 3}
   circleSegments: 100
-  gridColor:
-    serializedVersion: 2
-    rgba: 4286216826
-  gridWidth: 0.01
   lineColor:
     serializedVersion: 2
     rgba: 4280953386
@@ -555,6 +551,18 @@ MonoBehaviour:
     rgba: 4278190080
   gridWidth: 0.03
   gridPrefab: {fileID: 40997469115069886, guid: a4734b92891a37b44b4fce38c969e708, type: 3}
+--- !u!114 &106621519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106621513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f188b6edf442dd64693035da17db15f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DrawingData
 --- !u!1 &220403138
 GameObject:
   m_ObjectHideFlags: 0
