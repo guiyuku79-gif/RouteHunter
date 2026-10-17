@@ -21,17 +21,9 @@ public class DrawingManager : MonoBehaviour
     [SerializeField] Vector2 CampasWidthRange;
     [SerializeField] Vector2 CampasHeightRange;
 
-    // 今までに描いた図形
-    Dictionary<int, LineData> lineDataList = new();
-    Dictionary<int, CircleData> circleDataList = new();
 
-    //線そのものを管理
-    Dictionary<int, LineRenderer> lines = new();
 
-    Dictionary<int, GameObject> circleCenters = new();
-
-    // 交点計算と交点一覧の管理
-    GetIntersection getIntersection = new();
+    DrawingData drawingData = new();
 
     // 現在描画中の線分
     LineRenderer currentLine;
@@ -63,7 +55,6 @@ public class DrawingManager : MonoBehaviour
 
     void Start()
     {
-
         uiManager = GetComponent<UIManager>();
 
         CreateGrid();
@@ -77,7 +68,7 @@ public class DrawingManager : MonoBehaviour
 
     void CreateGrid()
     {
-        AddIntersections(GetComponent<GridGenerator>().GenerateGrid());
+        drawingData.AddIntersections(GetComponent<GridGenerator>().GenerateGrid(), 0);
     }
 
     void Update()
@@ -108,7 +99,7 @@ public class DrawingManager : MonoBehaviour
     void StartDrawing()
     {
         startPos = GetMouseWorldPosition();
-        startPos = getIntersection.Snap(startPos);
+        startPos = drawingData.getIntersection.Snap(startPos);
 
         if (isLineOut(startPos)) return;
 
@@ -151,7 +142,7 @@ public class DrawingManager : MonoBehaviour
     void UpdateDrawing()
     {
         Vector2 mousePos = GetMouseWorldPosition();
-        mousePos = getIntersection.Snap(mousePos);
+        mousePos = drawingData.getIntersection.Snap(mousePos);
 
         if (mode == Constants.Mode.Line)
         {
@@ -171,7 +162,7 @@ public class DrawingManager : MonoBehaviour
     void FinishDrawing()
     {
         Vector2 endPos = GetMouseWorldPosition();
-        endPos = getIntersection.Snap(endPos);
+        endPos = drawingData.getIntersection.Snap(endPos);
 
         drawing = false;
 
@@ -186,34 +177,17 @@ public class DrawingManager : MonoBehaviour
             }
             currentIndex++;
 
-            lines.Add(currentIndex, currentLine);
             currentLine.SetPosition(0, startPos);
             currentLine.SetPosition(1, endPos);
 
-            LineData newLine = new LineData(startPos, endPos);
+            drawingData.AddLine(currentIndex, currentLine, startPos, endPos);
 
-            // 新しい線分と既存の線分
-            foreach (LineData line in lineDataList.Values)
-            {
-                AddIntersections(getIntersection.GetLineLineIntersection(newLine, line));
-            }
-
-            // 新しい線分と既存の円
-            foreach (CircleData circle in circleDataList.Values)
-            {
-                AddIntersections(getIntersection.GetLineCircleIntersections(newLine, circle));
-            }
-
-            // 線分を保存
-            lineDataList.Add(currentIndex, newLine);
-
-
-            currentLine = null;
 
             Debug.Log($"線分の長さ{Vector2.Distance(startPos, endPos)}");
             bool isCompleted = GetComponent<QuestionManager>().CheckAnswer(Vector2.Distance(startPos, endPos));
             if (isCompleted) priviousCompleteMoves = currentIndex;
 
+            currentLine = null;
             currentMoves++;
         }
         else
@@ -229,8 +203,6 @@ public class DrawingManager : MonoBehaviour
             }
             currentIndex++;
 
-            lines.Add(currentIndex, currentCircle);
-            circleCenters.Add(currentIndex, currentCircleCenter);
             float radius;
             if (mode == Constants.Mode.FixedCompass) radius = fixedRadius;
             else radius = Vector2.Distance(startPos, endPos);
@@ -239,25 +211,11 @@ public class DrawingManager : MonoBehaviour
 
             DrawCircle(currentCircle, startPos, radius);
 
-            CircleData newCircle = new CircleData(startPos, radius);
-
-            // 新しい円と既存の線分
-            foreach (LineData line in lineDataList.Values)
-            {
-                AddIntersections(getIntersection.GetLineCircleIntersections(line, newCircle));
-            }
-
-
-            // 新しい円と既存の円
-            foreach (CircleData circle in circleDataList.Values)
-            {
-                AddIntersections(getIntersection.GetCircleCircleIntersections(newCircle, circle));
-            }
-
-            // 円を保存
-            circleDataList.Add(currentIndex, newCircle);
+            //Dataに追加する
+            drawingData.AddCircle(currentIndex, currentCircle, currentCircleCenter, startPos, radius);
 
             currentCircle = null;
+            currentCircleCenter = null;
             currentMoves++;
         }
 
@@ -286,17 +244,6 @@ public class DrawingManager : MonoBehaviour
         }
     }
 
-    void AddIntersections(List<Vector2> points)
-    {
-        foreach (Vector2 point in points)
-        {
-            if (getIntersection.AddIntersection(currentIndex, point))
-            {
-                //Debug.Log("交点追加 : " + point);
-            }
-        }
-    }
-
     // マウス座標 → ワールド座標
     Vector2 GetMouseWorldPosition()
     {
@@ -317,21 +264,21 @@ public class DrawingManager : MonoBehaviour
 
     public void Reset()
     {
-        foreach (LineRenderer lineRenderer in lines.Values)
+        foreach (LineRenderer lineRenderer in drawingData.lines.Values)
         {
             Destroy(lineRenderer.gameObject);
         }
-        lines.Clear();
-        foreach (GameObject gameObject in circleCenters.Values)
+        drawingData.lines.Clear();
+        foreach (GameObject gameObject in drawingData.circleCenters.Values)
         {
             Destroy(gameObject);
         }
-        circleCenters.Clear();
+        drawingData.circleCenters.Clear();
 
 
-        lineDataList.Clear();
-        circleDataList.Clear();
-        getIntersection.intersections.Clear();
+        drawingData.lineDataList.Clear();
+        drawingData.circleDataList.Clear();
+        drawingData.getIntersection.intersections.Clear();
 
         priviousCompleteMoves = 0;
         CreateGrid();
@@ -341,21 +288,21 @@ public class DrawingManager : MonoBehaviour
     {
         if (!CanUndo()) return;
 
-        if (lineDataList.ContainsKey(currentIndex))
+        if (drawingData.lineDataList.ContainsKey(currentIndex))
         {
-            lineDataList.Remove(currentIndex);
+            drawingData.lineDataList.Remove(currentIndex);
         }
         else
         {
-            circleDataList.Remove(currentIndex);
-            Destroy(circleCenters[currentIndex]);
-            circleCenters.Remove(currentIndex);
+            drawingData.circleDataList.Remove(currentIndex);
+            Destroy(drawingData.circleCenters[currentIndex]);
+            drawingData.circleCenters.Remove(currentIndex);
         }
 
-        Destroy(lines[currentIndex].gameObject);
-        lines.Remove(currentIndex);
+        Destroy(drawingData.lines[currentIndex].gameObject);
+        drawingData.lines.Remove(currentIndex);
 
-        getIntersection.UndoIntersection(currentIndex);
+        drawingData.getIntersection.UndoIntersection(currentIndex);
         currentIndex--;
         currentMoves--;
         uiManager.UpdateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel), CanUndo());
