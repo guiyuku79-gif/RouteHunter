@@ -9,14 +9,11 @@ public class DrawingManager : MonoBehaviour
     [Header("Prefab")]
     [SerializeField] LineRenderer linePrefab;
     [SerializeField] LineRenderer circlePrefab;
-    [SerializeField] LineRenderer gridPrefab;
     [SerializeField] GameObject circleCenterPrefab;
 
     [Header("Circle")]
     [SerializeField] int circleSegments = 100;
 
-    [SerializeField] Color32 gridColor;
-    [SerializeField] float gridWidth = 0.03f;
     [SerializeField] Color32 lineColor;
     [SerializeField] float lineWidth = 0.05f;
 
@@ -70,7 +67,6 @@ public class DrawingManager : MonoBehaviour
         uiManager = GetComponent<UIManager>();
 
         CreateGrid();
-
         LineMode();
 
         currentMoves = 0;
@@ -81,56 +77,11 @@ public class DrawingManager : MonoBehaviour
 
     void CreateGrid()
     {
-        currentIndex = 0;
-        for (int i = 0; i < 8; i++)
-        {
-            LineRenderer Line = Instantiate(gridPrefab);
-            Line.positionCount = 2;
-            Line.SetPosition(0, new Vector2(5.5f, -4f + i));
-            Line.SetPosition(1, new Vector2(-7.5f, -4f + i));
-            Line.startColor = gridColor;
-            Line.endColor = gridColor;
-            Line.startWidth = gridWidth;
-            Line.endWidth = gridWidth;
-
-            LineData newLine = new LineData(new Vector2(5.5f, -4f + i), new Vector2(-7.5f, -4f + i));
-            currentIndex++;
-            lineDataList.Add(currentIndex, newLine);
-
-        }
-        for (int i = 0; i < 13; i++)
-        {
-            LineRenderer Line = Instantiate(gridPrefab);
-            Line.positionCount = 2;
-            Line.SetPosition(0, new Vector2(-7f + i, 2.5f));
-            Line.SetPosition(1, new Vector2(-7f + i, -4.5f));
-            Line.startColor = gridColor;
-            Line.endColor = gridColor;
-            Line.startWidth = gridWidth;
-            Line.endWidth = gridWidth;
-
-            LineData newLine = new LineData(new Vector2(-7f + i, 2.5f), new Vector2(-7f + i, -4.5f));
-
-            foreach (LineData line in lineDataList.Values)
-            {
-                AddIntersections(getIntersection.GetLineLineIntersection(newLine, line));
-            }
-            currentIndex++;
-            lineDataList.Add(currentIndex, newLine);
-
-        }
+        AddIntersections(GetComponent<GridGenerator>().GenerateGrid());
     }
-
 
     void Update()
     {
-        // Lキーで線分
-        if (Keyboard.current.lKey.wasPressedThisFrame) LineMode();
-        // Cキーで円
-        if (Keyboard.current.cKey.wasPressedThisFrame) CompassMode();
-
-        if (Keyboard.current.zKey.wasPressedThisFrame) Undo();
-
         // 描画開始
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
@@ -144,6 +95,12 @@ public class DrawingManager : MonoBehaviour
             {
                 FinishDrawing();
             }
+        }
+        else
+        {
+            if (Keyboard.current.lKey.wasPressedThisFrame) LineMode();
+            if (Keyboard.current.cKey.wasPressedThisFrame) CompassMode();
+            if (Keyboard.current.zKey.wasPressedThisFrame) Undo();
         }
     }
 
@@ -297,10 +254,8 @@ public class DrawingManager : MonoBehaviour
                 AddIntersections(getIntersection.GetCircleCircleIntersections(newCircle, circle));
             }
 
-
             // 円を保存
             circleDataList.Add(currentIndex, newCircle);
-
 
             currentCircle = null;
             currentMoves++;
@@ -409,7 +364,7 @@ public class DrawingManager : MonoBehaviour
 
     public bool CanUndo()
     {
-        return !(currentIndex <= 21 || currentIndex <= priviousCompleteMoves);
+        return !(currentIndex <= priviousCompleteMoves);
     }
 
 

@@ -452,6 +452,7 @@ GameObject:
   - component: {fileID: 106621515}
   - component: {fileID: 106621516}
   - component: {fileID: 106621517}
+  - component: {fileID: 106621518}
   m_Layer: 0
   m_Name: DrawingManager
   m_TagString: Untagged
@@ -534,6 +535,26 @@ MonoBehaviour:
   undoButton: {fileID: 422830176}
   moveUI: {fileID: 597154972}
   beltConveyor: {fileID: 2126047593}
+--- !u!114 &106621518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106621513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 935bc89664bb8a84b85a9fcc4dff62f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridGenerator
+  gridStartPos: {x: -6, y: -4}
+  gridNumber: {x: 12, y: 6}
+  gridSize: 1
+  gridColor:
+    serializedVersion: 2
+    rgba: 4278190080
+  gridWidth: 0.03
+  gridPrefab: {fileID: 40997469115069886, guid: a4734b92891a37b44b4fce38c969e708, type: 3}
 --- !u!1 &220403138
 GameObject:
   m_ObjectHideFlags: 0
