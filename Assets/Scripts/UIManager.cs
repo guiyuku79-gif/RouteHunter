@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] SpriteRenderer compassButton;
     [SerializeField] SpriteRenderer lineButton;
     [SerializeField] SpriteRenderer fixedCompassButton;
+    [SerializeField] SpriteRenderer undoButton;
     [SerializeField] TextMeshProUGUI moveUI;
 
     public void CompassModeUI()
@@ -28,10 +29,15 @@ public class UIManager : MonoBehaviour
         fixedCompassButton.color = Color.gray;
     }
 
-    public void updateMoveUI(int currentMoves, int[] levels)
+    public void UpdateMoveUI(int currentMoves, int[] levels,bool canUndo)
     {
         int sum = 0;
         foreach (int level in levels) sum += level;
         moveUI.text = $"{currentMoves} moves\ntargetMoves {sum}";
+
+        if (canUndo) undoButton.color = Color.white;
+        else undoButton.color = Color.gray;
     }
+
+
 }

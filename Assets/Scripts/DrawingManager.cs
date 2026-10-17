@@ -83,7 +83,7 @@ public class DrawingManager : MonoBehaviour
 
         currentMoves = 0;
 
-        uiManager.updateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel));
+        uiManager.UpdateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel), CanUndo());
 
 
 
@@ -228,8 +228,6 @@ public class DrawingManager : MonoBehaviour
 
         drawing = false;
 
-
-
         if (mode == Mode.Line)
         {
             //範囲外の線は消す
@@ -318,7 +316,7 @@ public class DrawingManager : MonoBehaviour
             currentMoves++;
         }
 
-        uiManager.updateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel));
+        uiManager.UpdateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel), CanUndo());
 
     }
 
@@ -396,9 +394,8 @@ public class DrawingManager : MonoBehaviour
 
     public void Undo()
     {
-        if (currentIndex <= 21) return;
+        if (!CanUndo()) return;
 
-        if (currentIndex <= priviousCompleteMoves) return;
         if (lineDataList.ContainsKey(currentIndex))
         {
             lineDataList.Remove(currentIndex);
@@ -416,9 +413,15 @@ public class DrawingManager : MonoBehaviour
         getIntersection.UndoIntersection(currentIndex);
         currentIndex--;
         currentMoves--;
-        uiManager.updateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel));
+        uiManager.UpdateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel), CanUndo());
 
     }
+
+    public bool CanUndo()
+    {
+        return !(currentIndex <= 21 || currentIndex <= priviousCompleteMoves);
+    }
+
 
     public void CompassMode()
     {
