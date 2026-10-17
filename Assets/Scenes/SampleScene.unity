@@ -499,10 +499,6 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4280953386
   lineWidth: 0.05
-  compassButton: {fileID: 258650260}
-  lineButton: {fileID: 1980127508}
-  fixedCompassButton: {fileID: 253250659}
-  moveUI: {fileID: 597154972}
   CampasWidthRange: {x: -8, y: 6}
   CampasHeightRange: {x: -5, y: 3}
   mode: 0
@@ -535,7 +531,9 @@ MonoBehaviour:
   compassButton: {fileID: 258650260}
   lineButton: {fileID: 1980127508}
   fixedCompassButton: {fileID: 253250659}
+  undoButton: {fileID: 422830176}
   moveUI: {fileID: 597154972}
+  beltConveyor: {fileID: 2126047593}
 --- !u!1 &220403138
 GameObject:
   m_ObjectHideFlags: 0

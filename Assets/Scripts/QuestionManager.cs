@@ -103,7 +103,7 @@ public class QuestionManager : MonoBehaviour
         {
             if (box != null) box.RemoveBox();
         }
-
+        GetComponent<UIManager>().MoveConveyorUI();
         GetComponent<DrawingManager>().Reset();
         stageLevel++;
         StartStage(spawnFromRight: true);

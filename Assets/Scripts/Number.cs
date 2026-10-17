@@ -117,7 +117,7 @@ public static class Question
 
     public static int[] Levels(int level)
     {
-        if (level <= 3) return new[] { 1, 2, 3, 4 };
+        if (level <= 3) return new[] { 1, 1,1,1 };
         else return new[] { 1, 1, 2, 2 };
     }
 

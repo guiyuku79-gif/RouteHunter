@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using TMPro;
 
 public class UIManager : MonoBehaviour
@@ -9,6 +10,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] SpriteRenderer fixedCompassButton;
     [SerializeField] SpriteRenderer undoButton;
     [SerializeField] TextMeshProUGUI moveUI;
+    [SerializeField] GameObject beltConveyor;
 
     public void CompassModeUI()
     {
@@ -29,7 +31,7 @@ public class UIManager : MonoBehaviour
         fixedCompassButton.color = Color.gray;
     }
 
-    public void UpdateMoveUI(int currentMoves, int[] levels,bool canUndo)
+    public void UpdateMoveUI(int currentMoves, int[] levels, bool canUndo)
     {
         int sum = 0;
         foreach (int level in levels) sum += level;
@@ -39,5 +41,23 @@ public class UIManager : MonoBehaviour
         else undoButton.color = Color.gray;
     }
 
+    public void MoveConveyorUI()
+    {
+        StartCoroutine(MoveBeltConveyorLeft());
+    }
+    IEnumerator MoveBeltConveyorLeft()
+    {
+        Vector3 start = beltConveyor.transform.position;
+        Vector3 target = start + Vector3.left.normalized * 18f;
+        float elapsed = 0f;
 
+        while (elapsed < 1.5f)
+        {
+            elapsed += Time.deltaTime;
+            beltConveyor.transform.position = Vector3.Lerp(start, target, elapsed / 1.5f);
+            yield return null;
+        }
+
+        beltConveyor.transform.position = start;
+    }
 }
