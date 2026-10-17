@@ -21,12 +21,6 @@ public class DrawingManager : MonoBehaviour
     [SerializeField] float lineWidth = 0.05f;
 
 
-    [SerializeField] SpriteRenderer compassButton;
-    [SerializeField] SpriteRenderer lineButton;
-    [SerializeField] SpriteRenderer fixedCompassButton;
-
-    [SerializeField] TextMeshProUGUI moveUI;
-
     [SerializeField] Vector2 CampasWidthRange;
     [SerializeField] Vector2 CampasHeightRange;
 
@@ -75,14 +69,23 @@ public class DrawingManager : MonoBehaviour
     //直近で線が完成したときの手数
     int priviousCompleteMoves = 0;
 
+    //ほかのmanager
+    UIManager uiManager;
+
     void Start()
     {
+
+        uiManager = GetComponent<UIManager>();
+
         CreateGrid();
 
         LineMode();
 
         currentMoves = 0;
-        updateMoveUI();
+
+        uiManager.updateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel));
+
+
 
     }
 
@@ -315,7 +318,8 @@ public class DrawingManager : MonoBehaviour
             currentMoves++;
         }
 
-        updateMoveUI();
+        uiManager.updateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel));
+
     }
 
     bool isLineOut(Vector2 position)
@@ -412,38 +416,26 @@ public class DrawingManager : MonoBehaviour
         getIntersection.UndoIntersection(currentIndex);
         currentIndex--;
         currentMoves--;
-        updateMoveUI();
+        uiManager.updateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel));
+
     }
 
     public void CompassMode()
     {
         mode = Mode.Compass;
-        compassButton.color = Color.gray;
-        lineButton.color = Color.white;
-        fixedCompassButton.color = Color.white;
+        uiManager.CompassModeUI();
     }
 
     public void LineMode()
     {
         mode = Mode.Line;
-        compassButton.color = Color.white;
-        lineButton.color = Color.gray;
-        fixedCompassButton.color = Color.white;
+        uiManager.LineModeUI();
     }
 
     public void FixedCompassMode()
     {
         mode = Mode.FixedCompass;
-        compassButton.color = Color.white;
-        lineButton.color = Color.white;
-        fixedCompassButton.color = Color.gray;
+        uiManager.FixedCompassModeUI();
     }
 
-    void updateMoveUI()
-    {
-        int[] levels = Question.Levels(GetComponent<QuestionManager>().stageLevel);
-        int sum = 0;
-        foreach (int level in levels) sum += level;
-        moveUI.text = $"{currentMoves} moves\ntargetMoves {sum}";
-    }
 }

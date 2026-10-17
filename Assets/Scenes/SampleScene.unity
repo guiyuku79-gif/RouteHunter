@@ -451,6 +451,7 @@ GameObject:
   - component: {fileID: 106621514}
   - component: {fileID: 106621515}
   - component: {fileID: 106621516}
+  - component: {fileID: 106621517}
   m_Layer: 0
   m_Name: DrawingManager
   m_TagString: Untagged
@@ -490,7 +491,6 @@ MonoBehaviour:
   gridPrefab: {fileID: 40997469115069886, guid: a4734b92891a37b44b4fce38c969e708, type: 3}
   circleCenterPrefab: {fileID: 7434594598418788833, guid: fef113d2215ee3c43b0fdf716cee14b0, type: 3}
   circleSegments: 100
-  snapRadius: 0.1
   gridColor:
     serializedVersion: 2
     rgba: 4286216826
@@ -519,6 +519,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestionManager
   boxPrefab: {fileID: 3422521317982901422, guid: 47f1216c8b3b3354db56d56b7ccc3e67, type: 3}
+  stageLevel: 1
+--- !u!114 &106621517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106621513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24b78b3fb1e05dc4ead61f67cbad1969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  compassButton: {fileID: 258650260}
+  lineButton: {fileID: 1980127508}
+  fixedCompassButton: {fileID: 253250659}
+  moveUI: {fileID: 597154972}
 --- !u!1 &220403138
 GameObject:
   m_ObjectHideFlags: 0
