@@ -1,18 +1,19 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DrawingData
+public class DrawingData : MonoBehaviour
 {
     // 今までに描いた図形
-    public Dictionary<int, LineData> lineDataList = new();
-    public Dictionary<int, CircleData> circleDataList = new();
+    [NonSerialized] public Dictionary<int, LineData> lineDataList = new();
+    [NonSerialized] public Dictionary<int, CircleData> circleDataList = new();
 
     //線そのものを管理
-    public Dictionary<int, LineRenderer> lines = new();
+    [NonSerialized] public Dictionary<int, LineRenderer> lines = new();
 
-    public Dictionary<int, GameObject> circleCenters = new();
+    [NonSerialized] public Dictionary<int, GameObject> circleCenters = new();
 
-    public GetIntersection getIntersection = new();
+    [NonSerialized] public GetIntersection getIntersection = new();
 
     public void AddLine(int currentIndex, LineRenderer currentLine, Vector2 startPos, Vector2 endPos)
     {
@@ -69,5 +70,43 @@ public class DrawingData
 
         // 円を保存
         circleDataList.Add(currentIndex, newCircle);
+    }
+
+    public void ResetData()
+    {
+        foreach (LineRenderer lineRenderer in lines.Values)
+        {
+            Destroy(lineRenderer.gameObject);
+        }
+        lines.Clear();
+        foreach (GameObject gameObject in circleCenters.Values)
+        {
+            Destroy(gameObject);
+        }
+        circleCenters.Clear();
+
+
+        lineDataList.Clear();
+        circleDataList.Clear();
+        getIntersection.intersections.Clear();
+    }
+
+    public void UndoData(int currentIndex)
+    {
+        if (lineDataList.ContainsKey(currentIndex))
+        {
+            lineDataList.Remove(currentIndex);
+        }
+        else
+        {
+            circleDataList.Remove(currentIndex);
+            Destroy(circleCenters[currentIndex]);
+            circleCenters.Remove(currentIndex);
+        }
+
+        Destroy(lines[currentIndex].gameObject);
+        lines.Remove(currentIndex);
+
+        getIntersection.UndoIntersection(currentIndex);
     }
 }

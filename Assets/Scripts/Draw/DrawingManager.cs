@@ -17,11 +17,8 @@ public class DrawingManager : MonoBehaviour
     [SerializeField] Color32 lineColor;
     [SerializeField] float lineWidth = 0.05f;
 
-
     [SerializeField] Vector2 CampasWidthRange;
     [SerializeField] Vector2 CampasHeightRange;
-
-
 
     DrawingData drawingData = new();
 
@@ -235,9 +232,7 @@ public class DrawingManager : MonoBehaviour
         for (int i = 0; i <= circleSegments; i++)
         {
             float angle = 2f * Mathf.PI * i / circleSegments;
-
             float x = center.x + Mathf.Cos(angle) * radius;
-
             float y = center.y + Mathf.Sin(angle) * radius;
 
             line.SetPosition(i, new Vector3(x, y, 0));
@@ -264,21 +259,7 @@ public class DrawingManager : MonoBehaviour
 
     public void Reset()
     {
-        foreach (LineRenderer lineRenderer in drawingData.lines.Values)
-        {
-            Destroy(lineRenderer.gameObject);
-        }
-        drawingData.lines.Clear();
-        foreach (GameObject gameObject in drawingData.circleCenters.Values)
-        {
-            Destroy(gameObject);
-        }
-        drawingData.circleCenters.Clear();
-
-
-        drawingData.lineDataList.Clear();
-        drawingData.circleDataList.Clear();
-        drawingData.getIntersection.intersections.Clear();
+        drawingData.ResetData();
 
         priviousCompleteMoves = 0;
         CreateGrid();
@@ -288,25 +269,11 @@ public class DrawingManager : MonoBehaviour
     {
         if (!CanUndo()) return;
 
-        if (drawingData.lineDataList.ContainsKey(currentIndex))
-        {
-            drawingData.lineDataList.Remove(currentIndex);
-        }
-        else
-        {
-            drawingData.circleDataList.Remove(currentIndex);
-            Destroy(drawingData.circleCenters[currentIndex]);
-            drawingData.circleCenters.Remove(currentIndex);
-        }
+        drawingData.UndoData(currentIndex);
 
-        Destroy(drawingData.lines[currentIndex].gameObject);
-        drawingData.lines.Remove(currentIndex);
-
-        drawingData.getIntersection.UndoIntersection(currentIndex);
         currentIndex--;
         currentMoves--;
         uiManager.UpdateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel), CanUndo());
-
     }
 
     public bool CanUndo()
