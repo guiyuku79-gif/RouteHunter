@@ -49,15 +49,7 @@ public class DrawingManager : MonoBehaviour
 
     Vector2 startPos;
 
-
-    //現在のモードを構造体にする
-    public enum Mode
-    {
-        Line,
-        Compass,
-        FixedCompass
-    }
-    public Mode mode;
+    public Constants.Mode mode;
 
     // 現在描画中か
     bool drawing = false;
@@ -84,8 +76,6 @@ public class DrawingManager : MonoBehaviour
         currentMoves = 0;
 
         uiManager.UpdateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel), CanUndo());
-
-
 
     }
 
@@ -167,7 +157,7 @@ public class DrawingManager : MonoBehaviour
 
         drawing = true;
 
-        if (mode == Mode.Line)
+        if (mode == Constants.Mode.Line)
         {
 
             // 線分を作る
@@ -206,7 +196,7 @@ public class DrawingManager : MonoBehaviour
         Vector2 mousePos = GetMouseWorldPosition();
         mousePos = getIntersection.Snap(mousePos);
 
-        if (mode == Mode.Line)
+        if (mode == Constants.Mode.Line)
         {
             // 線分の終点を更新
             currentLine.SetPosition(1, mousePos);
@@ -214,7 +204,7 @@ public class DrawingManager : MonoBehaviour
         else
         {
             float radius;
-            if (mode == Mode.FixedCompass) radius = fixedRadius;
+            if (mode == Constants.Mode.FixedCompass) radius = fixedRadius;
             else radius = Vector2.Distance(startPos, mousePos);
 
             DrawCircle(currentCircle, startPos, radius);
@@ -228,7 +218,7 @@ public class DrawingManager : MonoBehaviour
 
         drawing = false;
 
-        if (mode == Mode.Line)
+        if (mode == Constants.Mode.Line)
         {
             //範囲外の線は消す
             if (isLineOut(startPos) || isLineOut(endPos))
@@ -285,7 +275,7 @@ public class DrawingManager : MonoBehaviour
             lines.Add(currentIndex, currentCircle);
             circleCenters.Add(currentIndex, currentCircleCenter);
             float radius;
-            if (mode == Mode.FixedCompass) radius = fixedRadius;
+            if (mode == Constants.Mode.FixedCompass) radius = fixedRadius;
             else radius = Vector2.Distance(startPos, endPos);
 
             fixedRadius = radius;
@@ -425,19 +415,19 @@ public class DrawingManager : MonoBehaviour
 
     public void CompassMode()
     {
-        mode = Mode.Compass;
+        mode = Constants.Mode.Compass;
         uiManager.CompassModeUI();
     }
 
     public void LineMode()
     {
-        mode = Mode.Line;
+        mode = Constants.Mode.Line;
         uiManager.LineModeUI();
     }
 
     public void FixedCompassMode()
     {
-        mode = Mode.FixedCompass;
+        mode = Constants.Mode.FixedCompass;
         uiManager.FixedCompassModeUI();
     }
 

@@ -5,8 +5,6 @@ using UnityEngine.Serialization;
 public class BoxManager : MonoBehaviour
 {
     const float CharacterSpacing = 0.125f;
-    const float BoxTravelDistance = 18f;
-    const float BoxTravelDuration = 1.5f;
 
     [SerializeField] GameObject letterPrefab;
     [FormerlySerializedAs("linePrefab")]
@@ -76,13 +74,13 @@ public class BoxManager : MonoBehaviour
     IEnumerator MoveBox(Vector3 direction, bool destroyWhenFinished)
     {
         Vector3 start = transform.localPosition;
-        Vector3 target = start + direction.normalized * BoxTravelDistance;
+        Vector3 target = start + direction.normalized * Constants.BoxMoveDistance;
         float elapsed = 0f;
 
-        while (elapsed < BoxTravelDuration)
+        while (elapsed < Constants.BoxMoveDuration)
         {
             elapsed += Time.deltaTime;
-            transform.localPosition = Vector3.Lerp(start, target, elapsed / BoxTravelDuration);
+            transform.localPosition = Vector3.Lerp(start, target, elapsed / Constants.BoxMoveDuration);
             yield return null;
         }
 

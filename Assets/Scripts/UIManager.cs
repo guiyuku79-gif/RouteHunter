@@ -33,10 +33,11 @@ public class UIManager : MonoBehaviour
 
     public void UpdateMoveUI(int currentMoves, int[] levels, bool canUndo)
     {
+        //手数の表示
         int sum = 0;
         foreach (int level in levels) sum += level;
         moveUI.text = $"{currentMoves} moves\ntargetMoves {sum}";
-
+        //戻るボタンの表示
         if (canUndo) undoButton.color = Color.white;
         else undoButton.color = Color.gray;
     }
@@ -48,13 +49,13 @@ public class UIManager : MonoBehaviour
     IEnumerator MoveBeltConveyorLeft()
     {
         Vector3 start = beltConveyor.transform.position;
-        Vector3 target = start + Vector3.left.normalized * 18f;
+        Vector3 target = start + Vector3.left.normalized * Constants.BoxMoveDistance;
         float elapsed = 0f;
 
-        while (elapsed < 1.5f)
+        while (elapsed < Constants.BoxMoveDuration)
         {
             elapsed += Time.deltaTime;
-            beltConveyor.transform.position = Vector3.Lerp(start, target, elapsed / 1.5f);
+            beltConveyor.transform.position = Vector3.Lerp(start, target, elapsed / Constants.BoxMoveDuration);
             yield return null;
         }
 

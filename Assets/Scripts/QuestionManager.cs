@@ -5,10 +5,9 @@ using UnityEngine;
 public class QuestionManager : MonoBehaviour
 {
     const int QuestionsPerStage = 4;
-    const float FirstBoxX = -7f;
+    const float FirstBoxX = -6f;
     const float BoxSpacing = 4f;
     const float BoxY = 4f;
-    const float SpawnOffsetX = 18f;
     const float AnswerTolerance = 0.005f;
 
     [SerializeField] GameObject boxPrefab;
@@ -33,7 +32,7 @@ public class QuestionManager : MonoBehaviour
         for (int i = 0; i < QuestionsPerStage; i++)
         {
             float targetX = FirstBoxX + BoxSpacing * i;
-            float spawnX = spawnFromRight ? targetX + SpawnOffsetX : targetX;
+            float spawnX = spawnFromRight ? targetX + Constants.BoxMoveDistance : targetX;
             GameObject boxObject = Instantiate(boxPrefab, new Vector3(spawnX, BoxY, 0f), Quaternion.identity);
             BoxManager box = boxObject.GetComponent<BoxManager>();
             box.Init(questions[i]);
