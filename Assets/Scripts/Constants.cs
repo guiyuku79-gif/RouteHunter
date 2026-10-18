@@ -6,6 +6,9 @@ public static class Constants
 
     public const int CircleSegments = 100;
 
+    public static readonly Vector2 GridStartPos = new Vector2(-6f, -4f);
+    public static readonly Vector2Int GridNumber = new Vector2Int(12, 6);
+    public const float GridSize = 1f;
 
     public enum Mode
     {

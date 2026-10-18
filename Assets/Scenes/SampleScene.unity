@@ -491,7 +491,6 @@ MonoBehaviour:
   linePrefab: {fileID: 40997469115069886, guid: ff259088982e2b84a94319458c2dbc45, type: 3}
   circlePrefab: {fileID: 40997469115069886, guid: dc51e3f5fc974cc4185e3113f3a736a6, type: 3}
   circleCenterPrefab: {fileID: 7434594598418788833, guid: fef113d2215ee3c43b0fdf716cee14b0, type: 3}
-  circleSegments: 100
   lineColor:
     serializedVersion: 2
     rgba: 4280953386
@@ -543,9 +542,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 935bc89664bb8a84b85a9fcc4dff62f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridGenerator
-  gridStartPos: {x: -6, y: -4}
-  gridNumber: {x: 12, y: 6}
-  gridSize: 1
   gridColor:
     serializedVersion: 2
     rgba: 4278190080
@@ -1769,8 +1765,8 @@ Transform:
   m_GameObject: {fileID: 585227992}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.4273, y: -0.2003, z: 0}
-  m_LocalScale: {x: 3.0346584, y: 11.06325, z: 1}
+  m_LocalPosition: {x: 7.5692, y: -0.218, z: 0}
+  m_LocalScale: {x: 2.750918, y: 11.098653, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1205981009}

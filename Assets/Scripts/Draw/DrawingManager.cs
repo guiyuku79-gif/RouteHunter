@@ -13,9 +13,6 @@ public class DrawingManager : MonoBehaviour
     [SerializeField] Color32 lineColor;
     [SerializeField] float lineWidth = 0.05f;
 
-    [SerializeField] Vector2 CampasWidthRange;
-    [SerializeField] Vector2 CampasHeightRange;
-
     // 現在描画中の線分
     LineRenderer currentLine;
 
@@ -219,8 +216,8 @@ public class DrawingManager : MonoBehaviour
 
     bool isLineOut(Vector2 position)
     {
-        if (CampasWidthRange.x >= position.x || CampasWidthRange.y <= position.x) return true;
-        if (CampasHeightRange.x >= position.y || CampasHeightRange.y <= position.y) return true;
+        if (Constants.GridStartPos.x - 0.5f >= position.x || Constants.GridStartPos.x + Constants.GridNumber.x * Constants.GridSize + 0.5f <= position.x) return true;
+        if (Constants.GridStartPos.y - 0.5f >= position.y || Constants.GridStartPos.y + Constants.GridNumber.y * Constants.GridSize + 0.5f <= position.y) return true;
         return false;
     }
 

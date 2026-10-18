@@ -3,45 +3,42 @@ using UnityEngine;
 
 public class GridGenerator : MonoBehaviour
 {
-    [SerializeField] Vector2 gridStartPos;
-    [SerializeField] Vector2 gridNumber;
-    [SerializeField] float gridSize;
     [SerializeField] Color32 gridColor;
     [SerializeField] float gridWidth;
 
     [SerializeField] LineRenderer gridPrefab;
 
-    public (List<Vector2> intersections,List<LineData> lines) GenerateGrid()
+    public (List<Vector2> intersections, List<LineData> lines) GenerateGrid()
     {
         List<Vector2> gridIntersection = new List<Vector2>();
         List<LineData> lines = new List<LineData>();
-        for (int i = 0; i < gridNumber.y + 1; i++)
+        for (int i = 0; i < Constants.GridNumber.y + 1; i++)
         {
-            CreateOneGrid(new Vector2(0, i * gridSize), new Vector2(gridNumber.x * gridSize, i * gridSize));
-            lines.Add(new LineData(new Vector2(0, i * gridSize), new Vector2(gridNumber.x * gridSize, i * gridSize)));
+            CreateOneGrid(new Vector2(0, i * Constants.GridSize), new Vector2(Constants.GridNumber.x * Constants.GridSize, i * Constants.GridSize));
+            lines.Add(new LineData(new Vector2(0, i * Constants.GridSize), new Vector2(Constants.GridNumber.x * Constants.GridSize, i * Constants.GridSize)));
         }
-        for (int i = 0; i < gridNumber.x + 1; i++)
+        for (int i = 0; i < Constants.GridNumber.x + 1; i++)
         {
-            CreateOneGrid(new Vector2(i * gridSize, 0), new Vector2(i * gridSize, gridNumber.y * gridSize));
-            lines.Add(new LineData(new Vector2(i * gridSize, 0), new Vector2(i * gridSize, gridNumber.y * gridSize)));
+            CreateOneGrid(new Vector2(i * Constants.GridSize, 0), new Vector2(i * Constants.GridSize, Constants.GridNumber.y * Constants.GridSize));
+            lines.Add(new LineData(new Vector2(i * Constants.GridSize, 0), new Vector2(i * Constants.GridSize, Constants.GridNumber.y * Constants.GridSize)));
         }
-        for (int i = 0; i < gridNumber.y + 1; i++)
+        for (int i = 0; i < Constants.GridNumber.y + 1; i++)
         {
-            for (int j = 0; j < gridNumber.x + 1; j++)
+            for (int j = 0; j < Constants.GridNumber.x + 1; j++)
             {
-                gridIntersection.Add(new Vector2(j * gridSize, i + gridSize) + gridStartPos);
+                gridIntersection.Add(new Vector2(j * Constants.GridSize, i + Constants.GridSize) + Constants.GridStartPos);
             }
         }
 
-        return (gridIntersection,lines);
+        return (gridIntersection, lines);
     }
 
     void CreateOneGrid(Vector2 startPos, Vector2 endPos)
     {
         LineRenderer Line = Instantiate(gridPrefab);
         Line.positionCount = 2;
-        Line.SetPosition(0, startPos + gridStartPos);
-        Line.SetPosition(1, endPos + gridStartPos);
+        Line.SetPosition(0, startPos + Constants.GridStartPos);
+        Line.SetPosition(1, endPos + Constants.GridStartPos);
         Line.startColor = gridColor;
         Line.endColor = gridColor;
         Line.startWidth = gridWidth;
