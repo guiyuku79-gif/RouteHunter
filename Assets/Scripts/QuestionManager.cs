@@ -13,6 +13,8 @@ public class QuestionManager : MonoBehaviour
     [SerializeField] GameObject boxPrefab;
 
     public int stageLevel = 1;
+
+    public event Action StageCompleted;
     readonly List<BoxManager> boxes = new();
     readonly List<Fraction> questions = new();
     readonly bool[] solved = new bool[QuestionsPerStage];
@@ -81,7 +83,10 @@ public class QuestionManager : MonoBehaviour
             boxes[i].CloseBox();
         }
 
-        if (AllQuestionsSolved()) AdvanceStage();
+        if (isCompleted && AllQuestionsSolved())
+        {
+            StageCompleted?.Invoke();
+        }
 
         return isCompleted;
     }
@@ -96,14 +101,12 @@ public class QuestionManager : MonoBehaviour
         return true;
     }
 
-    void AdvanceStage()
+    public void AdvanceStage()
     {
         foreach (BoxManager box in boxes)
         {
             if (box != null) box.RemoveBox();
         }
-        GetComponent<UIManager>().MoveConveyorUI();
-        GetComponent<DrawingManager>().Reset();
         stageLevel++;
         StartStage(spawnFromRight: true);
     }

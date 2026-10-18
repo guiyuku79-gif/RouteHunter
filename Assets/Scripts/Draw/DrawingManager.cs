@@ -36,7 +36,7 @@ public class DrawingManager : MonoBehaviour
     //現在の手数
     int currentMoves = 0;
     //直近で線が完成したときの手数
-    int priviousCompleteMoves = 0;
+    int previousCompleteMoves = 0;
 
     //ほかのmanager
     UIManager uiManager;
@@ -171,15 +171,24 @@ public class DrawingManager : MonoBehaviour
             currentLine.SetPosition(0, startPos);
             currentLine.SetPosition(1, endPos);
 
+            float length = Vector2.Distance(startPos, endPos);
+
             drawingData.AddLine(currentIndex, currentLine, startPos, endPos);
-
-
-            Debug.Log($"線分の長さ{Vector2.Distance(startPos, endPos)}");
-            bool isCompleted = GetComponent<QuestionManager>().CheckAnswer(Vector2.Distance(startPos, endPos));
-            if (isCompleted) priviousCompleteMoves = currentIndex;
 
             currentLine = null;
             currentMoves++;
+
+            Debug.Log($"線分の長さ{length}");
+
+            QuestionManager questionManager = GetComponent<QuestionManager>();
+            int stageBeforeAnswer = questionManager.stageLevel;
+            bool isCompleted = questionManager.CheckAnswer(length);
+
+            if (isCompleted && questionManager.stageLevel == stageBeforeAnswer)
+            {
+                previousCompleteMoves = currentIndex;
+            }
+
         }
         else
         {
@@ -251,16 +260,51 @@ public class DrawingManager : MonoBehaviour
         return new Vector2(worldPosition.x, worldPosition.y);
     }
 
-    public void Reset()
+    void CancelDrawing()
     {
+        drawing = false;
+
+        if (currentLine != null)
+        {
+            Destroy(currentLine.gameObject);
+            currentLine = null;
+        }
+        if (currentCircle != null)
+        {
+            Destroy(currentCircle.gameObject);
+            currentCircle = null;
+        }
+        if (currentCircleCenter != null)
+        {
+            Destroy(currentCircleCenter);
+            currentCircleCenter = null;
+        }
+
+    }
+    public void ResetBoard()
+    {
+        CancelDrawing();
+
         drawingData.ResetData();
 
-        priviousCompleteMoves = 0;
+        currentIndex = 0;
+        previousCompleteMoves = 0;
+        fixedRadius = 0f;
+
         CreateGrid();
+
+        uiManager.UpdateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel), CanUndo());
+    }
+
+    public void BeginStage()
+    {
+        currentMoves = 0;
+        ResetBoard();
     }
 
     public void Undo()
     {
+        if (drawing) return;
         if (!CanUndo()) return;
 
         drawingData.UndoData(currentIndex);
@@ -272,24 +316,27 @@ public class DrawingManager : MonoBehaviour
 
     public bool CanUndo()
     {
-        return !(currentIndex <= priviousCompleteMoves);
+        return !(currentIndex <= previousCompleteMoves);
     }
 
 
     public void CompassMode()
     {
+        if (drawing) return;
         mode = Constants.Mode.Compass;
         uiManager.CompassModeUI();
     }
 
     public void LineMode()
     {
+        if (drawing) return;
         mode = Constants.Mode.Line;
         uiManager.LineModeUI();
     }
 
     public void FixedCompassMode()
     {
+        if (drawing) return;
         mode = Constants.Mode.FixedCompass;
         uiManager.FixedCompassModeUI();
     }
