@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class DrawingManager : MonoBehaviour
 {
@@ -11,8 +9,6 @@ public class DrawingManager : MonoBehaviour
     [SerializeField] LineRenderer circlePrefab;
     [SerializeField] GameObject circleCenterPrefab;
 
-    [Header("Circle")]
-    [SerializeField] int circleSegments = 100;
 
     [SerializeField] Color32 lineColor;
     [SerializeField] float lineWidth = 0.05f;
@@ -123,7 +119,7 @@ public class DrawingManager : MonoBehaviour
             // 円を作る
             currentCircle = Instantiate(circlePrefab);
 
-            currentCircle.positionCount = circleSegments + 1;
+            currentCircle.positionCount = Constants.CircleSegments + 1;
             currentCircle.startColor = lineColor;
             currentCircle.endColor = lineColor;
             currentCircle.startWidth = lineWidth;
@@ -230,9 +226,9 @@ public class DrawingManager : MonoBehaviour
 
     void DrawCircle(LineRenderer line, Vector2 center, float radius)
     {
-        for (int i = 0; i <= circleSegments; i++)
+        for (int i = 0; i <= Constants.CircleSegments; i++)
         {
-            float angle = 2f * Mathf.PI * i / circleSegments;
+            float angle = 2f * Mathf.PI * i / Constants.CircleSegments;
             float x = center.x + Mathf.Cos(angle) * radius;
             float y = center.y + Mathf.Sin(angle) * radius;
 
