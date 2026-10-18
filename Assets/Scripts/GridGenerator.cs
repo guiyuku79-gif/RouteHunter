@@ -8,41 +8,72 @@ public class GridGenerator : MonoBehaviour
 
     [SerializeField] LineRenderer gridPrefab;
 
+    readonly List<LineRenderer> gridRenderers = new();
+
     public (List<Vector2> intersections, List<LineData> lines) GenerateGrid()
     {
+        ClearGrid();
+
         List<Vector2> gridIntersection = new List<Vector2>();
         List<LineData> lines = new List<LineData>();
-        for (int i = 0; i < Constants.GridNumber.y + 1; i++)
+
+        for (int i = 0; i <= Constants.GridNumber.y; i++)
         {
-            CreateOneGrid(new Vector2(0, i * Constants.GridSize), new Vector2(Constants.GridNumber.x * Constants.GridSize, i * Constants.GridSize));
-            lines.Add(new LineData(new Vector2(0, i * Constants.GridSize), new Vector2(Constants.GridNumber.x * Constants.GridSize, i * Constants.GridSize)));
+            Vector2 start = GetGridWorldPos(0, i);
+            Vector2 end = GetGridWorldPos(Constants.GridNumber.x, i);
+
+            lines.Add(new LineData(start, end));
+            CreateOneGrid(start, end);
         }
-        for (int i = 0; i < Constants.GridNumber.x + 1; i++)
+        for (int i = 0; i <= Constants.GridNumber.x; i++)
         {
-            CreateOneGrid(new Vector2(i * Constants.GridSize, 0), new Vector2(i * Constants.GridSize, Constants.GridNumber.y * Constants.GridSize));
-            lines.Add(new LineData(new Vector2(i * Constants.GridSize, 0), new Vector2(i * Constants.GridSize, Constants.GridNumber.y * Constants.GridSize)));
+            Vector2 start = GetGridWorldPos(i, 0);
+            Vector2 end = GetGridWorldPos(i, Constants.GridNumber.y);
+
+            lines.Add(new LineData(start, end));
+            CreateOneGrid(start, end);
         }
-        for (int i = 0; i < Constants.GridNumber.y + 1; i++)
+        for (int y = 0; y <= Constants.GridNumber.y; y++)
         {
-            for (int j = 0; j < Constants.GridNumber.x + 1; j++)
+            for (int x = 0; x <= Constants.GridNumber.x; x++)
             {
-                gridIntersection.Add(new Vector2(j * Constants.GridSize, i + Constants.GridSize) + Constants.GridStartPos);
+                gridIntersection.Add(GetGridWorldPos(x, y));
             }
         }
 
         return (gridIntersection, lines);
     }
 
-    void CreateOneGrid(Vector2 startPos, Vector2 endPos)
+
+    //格子の番号をゲーム内の座標にする
+    Vector2 GetGridWorldPos(int x, int y)
     {
-        LineRenderer Line = Instantiate(gridPrefab);
-        Line.positionCount = 2;
-        Line.SetPosition(0, startPos + Constants.GridStartPos);
-        Line.SetPosition(1, endPos + Constants.GridStartPos);
-        Line.startColor = gridColor;
-        Line.endColor = gridColor;
-        Line.startWidth = gridWidth;
-        Line.endWidth = gridWidth;
+        return Constants.GridStartPos + new Vector2(x * Constants.GridSize, y * Constants.GridSize);
     }
 
+    void CreateOneGrid(Vector2 startPos, Vector2 endPos)
+    {
+        LineRenderer line = Instantiate(gridPrefab);
+        line.useWorldSpace = true;
+        line.positionCount = 2;
+        line.SetPosition(0, startPos);
+        line.SetPosition(1, endPos);
+        line.startColor = gridColor;
+        line.endColor = gridColor;
+        line.startWidth = gridWidth;
+        line.endWidth = gridWidth;
+
+        gridRenderers.Add(line);
+    }
+
+    void ClearGrid()
+    {
+        foreach (LineRenderer line in gridRenderers)
+        {
+            if (line == null) continue;
+
+            Destroy(line.gameObject);
+        }
+        gridRenderers.Clear();
+    }
 }
