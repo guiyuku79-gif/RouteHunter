@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -38,13 +38,15 @@ public class DrawingManager : MonoBehaviour
     //直近で線が完成したときの手数
     int previousCompleteMoves = 0;
 
+    public event Action<float> LineCompleted;
+    public event Action<int, bool> DrawingStateChanged;
+    public event Action<Constants.Mode> ModeChanged;
+
     //ほかのmanager
-    UIManager uiManager;
     DrawingData drawingData;
 
     void Start()
     {
-        uiManager = GetComponent<UIManager>();
         drawingData = GetComponent<DrawingData>();
 
         CreateGrid();
@@ -52,8 +54,7 @@ public class DrawingManager : MonoBehaviour
 
         currentMoves = 0;
 
-        uiManager.UpdateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel), CanUndo());
-
+        NotifyDrawingStateChanged();
     }
 
     void CreateGrid()
@@ -180,14 +181,7 @@ public class DrawingManager : MonoBehaviour
 
             Debug.Log($"線分の長さ{length}");
 
-            QuestionManager questionManager = GetComponent<QuestionManager>();
-            int stageBeforeAnswer = questionManager.stageLevel;
-            bool isCompleted = questionManager.CheckAnswer(length);
-
-            if (isCompleted && questionManager.stageLevel == stageBeforeAnswer)
-            {
-                previousCompleteMoves = currentIndex;
-            }
+            LineCompleted?.Invoke(length);
 
         }
         else
@@ -219,7 +213,7 @@ public class DrawingManager : MonoBehaviour
             currentMoves++;
         }
 
-        uiManager.UpdateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel), CanUndo());
+        NotifyDrawingStateChanged();
 
     }
 
@@ -293,7 +287,7 @@ public class DrawingManager : MonoBehaviour
 
         CreateGrid();
 
-        uiManager.UpdateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel), CanUndo());
+        NotifyDrawingStateChanged();
     }
 
     public void BeginStage()
@@ -311,7 +305,7 @@ public class DrawingManager : MonoBehaviour
 
         currentIndex--;
         currentMoves--;
-        uiManager.UpdateMoveUI(currentMoves, Question.Levels(GetComponent<QuestionManager>().stageLevel), CanUndo());
+        NotifyDrawingStateChanged();
     }
 
     public bool CanUndo()
@@ -319,26 +313,35 @@ public class DrawingManager : MonoBehaviour
         return !(currentIndex <= previousCompleteMoves);
     }
 
+    public void LockUndoThroughCurrentDrawing()
+    {
+        previousCompleteMoves = currentIndex;
+    }
+
+    void NotifyDrawingStateChanged()
+    {
+        DrawingStateChanged?.Invoke(currentMoves, CanUndo());
+    }
 
     public void CompassMode()
     {
-        if (drawing) return;
-        mode = Constants.Mode.Compass;
-        uiManager.CompassModeUI();
+        SetMode(Constants.Mode.Compass);
     }
-
     public void LineMode()
     {
-        if (drawing) return;
-        mode = Constants.Mode.Line;
-        uiManager.LineModeUI();
+        SetMode(Constants.Mode.Line);
     }
-
     public void FixedCompassMode()
     {
-        if (drawing) return;
-        mode = Constants.Mode.FixedCompass;
-        uiManager.FixedCompassModeUI();
+        SetMode(Constants.Mode.FixedCompass);
+    }
+
+    void SetMode(Constants.Mode newMode)
+    {
+        if(drawing) return;
+
+        mode = newMode;
+        ModeChanged?.Invoke(mode);
     }
 
 }

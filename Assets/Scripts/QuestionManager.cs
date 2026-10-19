@@ -70,6 +70,17 @@ public class QuestionManager : MonoBehaviour
         return result;
     }
 
+    public int GetTargetMoves()
+    {
+        int total = 0;
+        
+        foreach( int level in Question.Levels(stageLevel)) 
+        {
+            total += Question.targetMoves[level];
+        }
+        return total;
+    }
+
     public bool CheckAnswer(float length)
     {
         bool isCompleted = false;

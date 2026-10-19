@@ -12,31 +12,28 @@ public class UIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI moveUI;
     [SerializeField] GameObject beltConveyor;
 
-    public void CompassModeUI()
+    public void UpdateModeUI(Constants.Mode selectedMode)
     {
-        compassButton.color = Color.gray;
-        lineButton.color = Color.white;
-        fixedCompassButton.color = Color.white;
-    }
-    public void LineModeUI()
-    {
-        compassButton.color = Color.white;
-        lineButton.color = Color.gray;
-        fixedCompassButton.color = Color.white;
-    }
-    public void FixedCompassModeUI()
-    {
-        compassButton.color = Color.white;
-        lineButton.color = Color.white;
-        fixedCompassButton.color = Color.gray;
+        lineButton.color =
+            selectedMode == Constants.Mode.Line
+                ? Color.gray
+                : Color.white;
+
+        compassButton.color =
+            selectedMode == Constants.Mode.Compass
+                ? Color.gray
+                : Color.white;
+
+        fixedCompassButton.color =
+            selectedMode == Constants.Mode.FixedCompass
+                ? Color.gray
+                : Color.white;
     }
 
-    public void UpdateMoveUI(int currentMoves, int[] levels, bool canUndo)
+    public void UpdateMoveUI(int currentMoves, int targetMoves, bool canUndo)
     {
         //手数の表示
-        int sum = 0;
-        foreach (int level in levels) sum += level;
-        moveUI.text = $"{currentMoves} moves\ntargetMoves {sum}";
+        moveUI.text = $"{currentMoves} moves\ntargetMoves {targetMoves}";
         //戻るボタンの表示
         if (canUndo) undoButton.color = Color.white;
         else undoButton.color = Color.gray;
