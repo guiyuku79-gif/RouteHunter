@@ -14,7 +14,6 @@ public class QuestionManager : MonoBehaviour
 
     public int stageLevel = 1;
 
-    public event Action StageCompleted;
     readonly List<BoxManager> boxes = new();
     readonly List<Fraction> questions = new();
     readonly bool[] solved = new bool[QuestionsPerStage];
@@ -73,33 +72,30 @@ public class QuestionManager : MonoBehaviour
     public int GetTargetMoves()
     {
         int total = 0;
-        
-        foreach( int level in Question.Levels(stageLevel)) 
+
+        foreach (int level in Question.Levels(stageLevel))
         {
             total += Question.targetMoves[level];
         }
         return total;
     }
 
-    public bool CheckAnswer(float length)
+    public (bool solvedAny, bool stageCompleted) CheckAnswer(float length)
     {
-        bool isCompleted = false;
+        bool solvedAny = false;
         for (int i = 0; i < QuestionsPerStage; i++)
         {
             if (solved[i] || Math.Abs(questions[i].ToFloat() - length) > AnswerTolerance) continue;
 
             Debug.Log($"{i}番目の長さが完成");
-            isCompleted = true;
+            solvedAny = true;
             solved[i] = true;
             boxes[i].CloseBox();
         }
 
-        if (isCompleted && AllQuestionsSolved())
-        {
-            StageCompleted?.Invoke();
-        }
+        bool stageCompleted = solvedAny && AllQuestionsSolved();
 
-        return isCompleted;
+        return (solvedAny, stageCompleted);
     }
 
     bool AllQuestionsSolved()

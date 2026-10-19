@@ -11,7 +11,6 @@ public class GameSessionController : MonoBehaviour
         drawingManager.LineCompleted += HandleLineCompleted;
         drawingManager.DrawingStateChanged += HandleDrawingStateChanged;
         drawingManager.ModeChanged += HandleModeChanged;
-        questionManager.StageCompleted += HandleStageCompleted;
     }
 
     void OnDisable()
@@ -22,30 +21,24 @@ public class GameSessionController : MonoBehaviour
             drawingManager.DrawingStateChanged -= HandleDrawingStateChanged;
             drawingManager.ModeChanged -= HandleModeChanged;
         }
-
-        if (questionManager != null)
-        {
-            questionManager.StageCompleted -= HandleStageCompleted;
-        }
     }
     void HandleLineCompleted(float length)
     {
-        int stageBeforeAnswer = questionManager.stageLevel;
+        var result = questionManager.CheckAnswer(length);
 
-        bool isCompleted = questionManager.CheckAnswer(length);
-
-        if (questionManager.stageLevel != stageBeforeAnswer)
+        if (result.stageCompleted)
         {
+            AdvanceToNextStage();
             return;
         }
 
-        if (isCompleted)
+        if (result.solvedAny)
         {
             drawingManager.LockUndoThroughCurrentDrawing();
         }
     }
 
-    void HandleStageCompleted()
+    void AdvanceToNextStage()
     {
         uiManager.MoveConveyorUI();
         questionManager.AdvanceStage();
