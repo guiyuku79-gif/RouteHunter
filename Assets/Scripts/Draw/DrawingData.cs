@@ -1,19 +1,18 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DrawingData : MonoBehaviour
 {
     // 今までに描いた図形
-    [NonSerialized] public Dictionary<int, LineData> lineDataList = new();
-    [NonSerialized] public Dictionary<int, CircleData> circleDataList = new();
+    private readonly Dictionary<int, LineData> lineDataList = new();
+    private readonly Dictionary<int, CircleData> circleDataList = new();
 
     //線そのものを管理
-    [NonSerialized] public Dictionary<int, LineRenderer> lines = new();
+    private readonly Dictionary<int, LineRenderer> lines = new();
 
-    [NonSerialized] public Dictionary<int, GameObject> circleCenters = new();
+    private readonly Dictionary<int, GameObject> circleCenters = new();
 
-    [NonSerialized] public GetIntersection getIntersection = new();
+    private readonly GetIntersection getIntersection = new();
 
     public void AddLine(int currentIndex, LineRenderer currentLine, Vector2 startPos, Vector2 endPos)
     {
@@ -37,14 +36,11 @@ public class DrawingData : MonoBehaviour
         lineDataList.Add(currentIndex, newLine);
     }
 
-    public void AddIntersections(List<Vector2> points, int currentIndex)
+    private void AddIntersections(List<Vector2> points, int currentIndex)
     {
         foreach (Vector2 point in points)
         {
-            if (getIntersection.AddIntersection(currentIndex, point))
-            {
-                //Debug.Log("交点追加 : " + point);
-            }
+            getIntersection.AddIntersection(currentIndex, point);
         }
     }
 
@@ -88,7 +84,7 @@ public class DrawingData : MonoBehaviour
 
         lineDataList.Clear();
         circleDataList.Clear();
-        getIntersection.intersections.Clear();
+        getIntersection.Clear();
     }
 
     public void UndoData(int currentIndex)
@@ -117,5 +113,10 @@ public class DrawingData : MonoBehaviour
         {
             lineDataList.Add(-i, lines[i]);
         }
+    }
+
+    public Vector2 Snap(Vector2 position)
+    {
+        return getIntersection.Snap(position);
     }
 }

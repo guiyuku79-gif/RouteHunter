@@ -8,7 +8,7 @@ public class GetIntersection
 
     const float SnapRadius = 0.1f;
 
-    public List<(int id, Vector2 point)> intersections = new();
+    private readonly List<(int id, Vector2 point)> intersections = new();
 
 
     public List<Vector2> GetLineLineIntersection(LineData line1, LineData line2)
@@ -143,6 +143,11 @@ public class GetIntersection
             }
         }
         return result;
+    }
+
+    public void Clear()
+    {
+        intersections.Clear();
     }
 }
 

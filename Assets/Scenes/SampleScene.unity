@@ -359,7 +359,6 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4280953386
   lineWidth: 0.05
-  mode: 0
 --- !u!114 &106621516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,7 +372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestionManager
   boxPrefab: {fileID: 3422521317982901422, guid: 47f1216c8b3b3354db56d56b7ccc3e67, type: 3}
-  stageLevel: 1
+  stageLevel: 4
 --- !u!114 &106621517
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -26,7 +26,7 @@ public class DrawingManager : MonoBehaviour
 
     Vector2 startPos;
 
-    public Constants.Mode mode;
+    private Constants.Mode mode;
 
     // 現在描画中か
     bool drawing = false;
@@ -35,8 +35,9 @@ public class DrawingManager : MonoBehaviour
 
     //現在の手数
     int currentMoves = 0;
-    //直近で線が完成したときの手数
-    int previousCompleteMoves = 0;
+
+    //これより前にはUndoできない
+    int undoBoundaryId = 0;
 
     public event Action<float> LineCompleted;
     public event Action<int, bool> DrawingStateChanged;
@@ -91,7 +92,7 @@ public class DrawingManager : MonoBehaviour
     void StartDrawing()
     {
         startPos = GetMouseWorldPosition();
-        startPos = drawingData.getIntersection.Snap(startPos);
+        startPos = drawingData.Snap(startPos);
 
         if (isLineOut(startPos)) return;
 
@@ -134,7 +135,7 @@ public class DrawingManager : MonoBehaviour
     void UpdateDrawing()
     {
         Vector2 mousePos = GetMouseWorldPosition();
-        mousePos = drawingData.getIntersection.Snap(mousePos);
+        mousePos = drawingData.Snap(mousePos);
 
         if (mode == Constants.Mode.Line)
         {
@@ -154,7 +155,7 @@ public class DrawingManager : MonoBehaviour
     void FinishDrawing()
     {
         Vector2 endPos = GetMouseWorldPosition();
-        endPos = drawingData.getIntersection.Snap(endPos);
+        endPos = drawingData.Snap(endPos);
 
         drawing = false;
 
@@ -282,7 +283,7 @@ public class DrawingManager : MonoBehaviour
         drawingData.ResetData();
 
         currentIndex = 0;
-        previousCompleteMoves = 0;
+        undoBoundaryId = 0;
         fixedRadius = 0f;
 
         CreateGrid();
@@ -310,12 +311,12 @@ public class DrawingManager : MonoBehaviour
 
     public bool CanUndo()
     {
-        return !(currentIndex <= previousCompleteMoves);
+        return !(currentIndex <= undoBoundaryId);
     }
 
     public void LockUndoThroughCurrentDrawing()
     {
-        previousCompleteMoves = currentIndex;
+        undoBoundaryId = currentIndex;
     }
 
     void NotifyDrawingStateChanged()
@@ -338,7 +339,7 @@ public class DrawingManager : MonoBehaviour
 
     void SetMode(Constants.Mode newMode)
     {
-        if(drawing) return;
+        if (drawing) return;
 
         mode = newMode;
         ModeChanged?.Invoke(mode);

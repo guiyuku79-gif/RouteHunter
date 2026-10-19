@@ -12,7 +12,7 @@ public class QuestionManager : MonoBehaviour
 
     [SerializeField] GameObject boxPrefab;
 
-    public int stageLevel = 1;
+    [SerializeField] private int stageLevel = 1;
 
     readonly List<BoxManager> boxes = new();
     readonly List<Fraction> questions = new();
