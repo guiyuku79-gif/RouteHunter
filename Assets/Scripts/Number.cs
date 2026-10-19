@@ -112,13 +112,17 @@ public static class Question
     //レベル別の目標手数
     public static Dictionary<int, int> targetMoves = new Dictionary<int, int>
     {
-        {1,2},{2,3},{3,3},{4,4}
+        {1,2},{2,3},{3,3},{4,4},{5,5},{6,7},{7,4}
     };
 
     public static int[] Levels(int level)
     {
-        if (level <= 3) return new[] { 1, 1,1,1 };
-        else return new[] { 1, 1, 2, 2 };
+        if (level <= 1) return new[] { 1, 1, 1, 1 };
+        else if (level <= 3) return new[] { 1, 2, 2, 3 };
+        else if (level <= 4) return new[] { 2, 3, 3, 4 };
+        else if (level <= 6) return new[] { 2, 4, 4, 5 };
+        else if (level <= 7) return new[] { 3, 4, 5, 7 };
+        else return new[] { 7, 7, 7, 7 };
     }
 
     //レベルに応じた問題が作られる
@@ -131,7 +135,7 @@ public static class Question
                 {
                     new Monomial(number:Random.Range(1,10))
                 });
-            case 2://√
+            case 2://√a
                 return new Fraction(numerator: new List<Monomial>
                 {
                     new Monomial(number:ChooseRootNumber(1,10),isRotted:true)
@@ -141,36 +145,48 @@ public static class Question
                 {
                     new Monomial(Coefficient:Random.Range(2,5),number:ChooseRootNumber(1,10),isRotted:true)
                 });
-            case 4://
+            case 4://√a+√b
                 return new Fraction(numerator: new List<Monomial>
                 {
                     new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
                     new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
                 });
-            case 5:
+            case 5://√a-b
                 return new Fraction(numerator: new List<Monomial>
                 {
-                    new Monomial(number:Random.Range(1,10),isRotted:true),
+                    new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
                     new Monomial(number:Random.Range(-1,-10)),
                 });
-            case 6:
+            case 6: // 1 ÷ √a
                 return new Fraction(
                     numerator: new List<Monomial>
                     {
-                        new Monomial(number:Random.Range(1,10),isRotted:true),
-                        new Monomial(number:Random.Range(1,10),isRotted:true),
+                        new Monomial(number:1),
+                    },
+                    denominator: new List<Monomial>
+                    {
+                        new Monomial(number:ChooseRootNumber(2,6),isRotted:true),
+                    }
+                );
+            case 7:// √a+√b ÷ c
+                return new Fraction(
+                    numerator: new List<Monomial>
+                    {
+                        new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
+                        new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
                     },
                     denominator: new List<Monomial>
                     {
                         new Monomial(number:Random.Range(2,6),isRotted:false),
                     }
                 );
+
         }
 
         return new Fraction(numerator: new List<Monomial> { });
     }
 
-    static List<int> rootInNumbers = new List<int> { 2, 3, 5, 6, 7, 10, 11, 13, 14, 15, 17, 19, 21, 22, 23, 26, 29 };
+    static List<int> rootInNumbers = new List<int> { 2, 3, 5, 6, 7, 10, 11, 13, 14, 15, 17, 19, 21, 22, 23, 26, 29, 30, 31, 33, 34, 35, 37, 38, 39 };
     static int ChooseRootNumber(int min, int max)
     {
         List<int> numbers = new();
