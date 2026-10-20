@@ -57,7 +57,7 @@ public class QuestionManager : MonoBehaviour
             float value;
             do
             {
-                question = Question.CreateTargetNumber(level);
+                question = QuestionGenerator.CreateTargetNumber(level);
                 value = question.ToFloat();
             }
             while (value <= 0.1f || value >= 10f || previousValues.Contains(value));
