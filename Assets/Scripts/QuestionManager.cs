@@ -45,7 +45,7 @@ public class QuestionManager : MonoBehaviour
 
     List<Fraction> CreateQuestionsForStage()
     {
-        int[] levels = Question.Levels(stageLevel);
+        int[] levels = StageRules.GetQuestionLevels(stageLevel);
 
 
         List<Fraction> result = new(QuestionsPerStage);
@@ -71,13 +71,7 @@ public class QuestionManager : MonoBehaviour
 
     public int GetTargetMoves()
     {
-        int total = 0;
-
-        foreach (int level in Question.Levels(stageLevel))
-        {
-            total += Question.targetMoves[level];
-        }
-        return total;
+        return StageRules.GetTargetMovesForStage(stageLevel);
     }
 
     public (bool solvedAny, bool stageCompleted) CheckAnswer(float length)

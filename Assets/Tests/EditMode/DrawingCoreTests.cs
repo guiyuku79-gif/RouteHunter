@@ -203,4 +203,40 @@ public class DrawingCoreTests
 
         AssertPoint(data.Snap(nearOldIntersection), nearOldIntersection);
     }
+
+    [TestCase(1, 8)]
+    [TestCase(2, 11)]
+    [TestCase(3, 11)]
+    [TestCase(4, 13)]
+    [TestCase(5, 16)]
+    [TestCase(6, 16)]
+    [TestCase(7, 16)]
+    [TestCase(8, 16)]
+    public void StageTargetMoves_MatchesCurrentRules(
+    int stageLevel,
+    int expectedMoves)
+    {
+        Assert.That(
+            StageRules.GetTargetMovesForStage(stageLevel),
+            Is.EqualTo(expectedMoves)
+        );
+    }
+
+    [TestCase(1, new int[] { 1, 1, 1, 1 })]
+    [TestCase(2, new int[] { 1, 2, 2, 3 })]
+    [TestCase(3, new int[] { 1, 2, 2, 3 })]
+    [TestCase(4, new int[] { 2, 3, 3, 4 })]
+    [TestCase(5, new int[] { 2, 4, 4, 5 })]
+    [TestCase(6, new int[] { 2, 4, 4, 5 })]
+    [TestCase(7, new int[] { 3, 4, 5, 7 })]
+    [TestCase(8, new int[] { 7, 7, 7, 7 })]
+    public void StageQuestionLevels_MatchCurrentRules(
+        int stageLevel,
+        int[] expectedLevels)
+    {
+        Assert.That(
+            StageRules.GetQuestionLevels(stageLevel),
+            Is.EqualTo(expectedLevels)
+        );
+    }
 }
