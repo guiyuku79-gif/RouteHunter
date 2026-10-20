@@ -1,0 +1,13 @@
+{
+    "name": "RouteHunter.Core.Tests",
+    "references": [
+        "RouteHunter.Core"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "autoReferenced": false
+}
