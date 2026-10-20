@@ -23,13 +23,13 @@ public class DrawingData : MonoBehaviour
         // 新しい線分と既存の線分
         foreach (LineData line in lineDataList.Values)
         {
-            AddIntersections(getIntersection.GetLineLineIntersection(newLine, line), currentIndex);
+            AddIntersections(IntersectionCalculator.GetLineLineIntersection(newLine, line), currentIndex);
         }
 
         // 新しい線分と既存の円
         foreach (CircleData circle in circleDataList.Values)
         {
-            AddIntersections(getIntersection.GetLineCircleIntersections(newLine, circle), currentIndex);
+            AddIntersections(IntersectionCalculator.GetLineCircleIntersections(newLine, circle), currentIndex);
         }
 
         // 線分を保存
@@ -54,14 +54,14 @@ public class DrawingData : MonoBehaviour
         // 新しい円と既存の線分
         foreach (LineData line in lineDataList.Values)
         {
-            AddIntersections(getIntersection.GetLineCircleIntersections(line, newCircle), currentIndex);
+            AddIntersections(IntersectionCalculator.GetLineCircleIntersections(line, newCircle), currentIndex);
         }
 
 
         // 新しい円と既存の円
         foreach (CircleData circle in circleDataList.Values)
         {
-            AddIntersections(getIntersection.GetCircleCircleIntersections(newCircle, circle), currentIndex);
+            AddIntersections(IntersectionCalculator.GetCircleCircleIntersections(newCircle, circle), currentIndex);
         }
 
         // 円を保存
