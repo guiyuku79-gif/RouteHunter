@@ -1,22 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DrawingData : MonoBehaviour
+public class DrawingData
 {
     // 今までに描いた図形
     private readonly Dictionary<int, LineData> lineDataList = new();
     private readonly Dictionary<int, CircleData> circleDataList = new();
 
-    //線そのものを管理
-    private readonly Dictionary<int, LineRenderer> lines = new();
-
-    private readonly Dictionary<int, GameObject> circleCenters = new();
 
     private readonly GetIntersection getIntersection = new();
 
-    public void AddLine(int currentIndex, LineRenderer currentLine, Vector2 startPos, Vector2 endPos)
+    public void AddLine(int currentIndex, Vector2 startPos, Vector2 endPos)
     {
-        lines.Add(currentIndex, currentLine);
 
         LineData newLine = new LineData(startPos, endPos);
 
@@ -44,10 +39,8 @@ public class DrawingData : MonoBehaviour
         }
     }
 
-    public void AddCircle(int currentIndex, LineRenderer currentCircle, GameObject currentCircleCenter, Vector2 startPos, float radius)
+    public void AddCircle(int currentIndex, Vector2 startPos, float radius)
     {
-        lines.Add(currentIndex, currentCircle);
-        circleCenters.Add(currentIndex, currentCircleCenter);
 
         CircleData newCircle = new CircleData(startPos, radius);
 
@@ -70,18 +63,6 @@ public class DrawingData : MonoBehaviour
 
     public void ResetData()
     {
-        foreach (LineRenderer lineRenderer in lines.Values)
-        {
-            Destroy(lineRenderer.gameObject);
-        }
-        lines.Clear();
-        foreach (GameObject gameObject in circleCenters.Values)
-        {
-            Destroy(gameObject);
-        }
-        circleCenters.Clear();
-
-
         lineDataList.Clear();
         circleDataList.Clear();
         getIntersection.Clear();
@@ -96,12 +77,7 @@ public class DrawingData : MonoBehaviour
         else
         {
             circleDataList.Remove(currentIndex);
-            Destroy(circleCenters[currentIndex]);
-            circleCenters.Remove(currentIndex);
         }
-
-        Destroy(lines[currentIndex].gameObject);
-        lines.Remove(currentIndex);
 
         getIntersection.UndoIntersection(currentIndex);
     }

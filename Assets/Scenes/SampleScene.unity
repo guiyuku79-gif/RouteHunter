@@ -313,11 +313,11 @@ GameObject:
   m_Component:
   - component: {fileID: 106621514}
   - component: {fileID: 106621515}
-  - component: {fileID: 106621519}
   - component: {fileID: 106621516}
   - component: {fileID: 106621517}
   - component: {fileID: 106621518}
   - component: {fileID: 106621520}
+  - component: {fileID: 106621521}
   m_Layer: 0
   m_Name: DrawingManager
   m_TagString: Untagged
@@ -408,18 +408,6 @@ MonoBehaviour:
     rgba: 4282927176
   gridWidth: 0.01
   gridPrefab: {fileID: 40997469115069886, guid: a4734b92891a37b44b4fce38c969e708, type: 3}
---- !u!114 &106621519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 106621513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f188b6edf442dd64693035da17db15f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DrawingData
 --- !u!114 &106621520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,6 +423,18 @@ MonoBehaviour:
   maxTime: 300
   timerUI: {fileID: 1249171768}
   timer: 0
+--- !u!114 &106621521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106621513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc5cfe677f4047f48a54ac4a781a3057, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DrawingView
 --- !u!1 &220403138
 GameObject:
   m_ObjectHideFlags: 0

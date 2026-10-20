@@ -44,11 +44,12 @@ public class DrawingManager : MonoBehaviour
     public event Action<Constants.Mode> ModeChanged;
 
     //ほかのmanager
-    DrawingData drawingData;
+    private readonly DrawingData drawingData = new DrawingData();
+    DrawingView drawingView;
 
     void Start()
     {
-        drawingData = GetComponent<DrawingData>();
+        drawingView = GetComponent<DrawingView>();
 
         CreateGrid();
         LineMode();
@@ -175,7 +176,8 @@ public class DrawingManager : MonoBehaviour
 
             float length = Vector2.Distance(startPos, endPos);
 
-            drawingData.AddLine(currentIndex, currentLine, startPos, endPos);
+            drawingData.AddLine(currentIndex, startPos, endPos);
+            drawingView.AddLine(currentIndex, currentLine);
 
             currentLine = null;
             currentMoves++;
@@ -207,7 +209,8 @@ public class DrawingManager : MonoBehaviour
             DrawCircle(currentCircle, startPos, radius);
 
             //Dataに追加する
-            drawingData.AddCircle(currentIndex, currentCircle, currentCircleCenter, startPos, radius);
+            drawingData.AddCircle(currentIndex, startPos, radius);
+            drawingView.AddCircle(currentIndex, currentCircle, currentCircleCenter);
 
             currentCircle = null;
             currentCircleCenter = null;
@@ -280,6 +283,7 @@ public class DrawingManager : MonoBehaviour
     {
         CancelDrawing();
 
+        drawingView.Clear();
         drawingData.ResetData();
 
         currentIndex = 0;
@@ -303,6 +307,7 @@ public class DrawingManager : MonoBehaviour
         if (!CanUndo()) return;
 
         drawingData.UndoData(currentIndex);
+        drawingView.RemoveDrawing(currentIndex);
 
         currentIndex--;
         currentMoves--;
