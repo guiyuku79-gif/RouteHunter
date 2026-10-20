@@ -1,21 +1,92 @@
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging.Abstractions;
 using UnityEngine;
 
 public class DrawingView : MonoBehaviour
 {
+    [SerializeField] LineRenderer linePrefab;
+    [SerializeField] LineRenderer circlePrefab;
+    [SerializeField] GameObject circleCenterPrefab;
+    [SerializeField] Color32 lineColor;
+    [SerializeField] float lineWidth = 0.05f;
     private readonly Dictionary<int, LineRenderer> renderers = new();
     private readonly Dictionary<int, GameObject> circleCenters = new();
 
-    public void AddLine(int id, LineRenderer line)
+    //描き途中の表示
+    LineRenderer preview;
+    GameObject previewCenter;
+
+    public void BeginLine(Vector2 start)
     {
-        renderers.Add(id, line);
+        CancelPreview();
+
+        preview = Instantiate(linePrefab);
+        ConfigureRenderer(preview);
+        preview.positionCount = 2;
+
+        UpdateLine(start,start);
     }
 
-    public void AddCircle(int id, LineRenderer circle, GameObject center)
+    public void BeginCircle(Vector2 center)
     {
-        renderers.Add(id, circle);
-        circleCenters.Add(id, center);
+        CancelPreview();
+
+        preview = Instantiate(circlePrefab);
+        ConfigureRenderer(preview);
+        preview.positionCount = Constants.CircleSegments + 1;
+
+        previewCenter = Instantiate(circleCenterPrefab);
+        previewCenter.transform.position = center;
+
+        UpdateCircle(center,0f);
     }
+
+    public void UpdateLine(Vector2 start, Vector2 end)
+    {
+        preview.SetPosition(0, start);
+        preview.SetPosition(1, end);
+    }
+
+    public void UpdateCircle(Vector2 center, float radius)
+    {
+        for (int i = 0; i <= Constants.CircleSegments; i++)
+        {
+            float angle = 2f * Mathf.PI * i / Constants.CircleSegments;
+
+            float x = center.x + Mathf.Cos(angle) * radius;
+            float y = center.y + Mathf.Sin(angle) * radius;
+
+            preview.SetPosition(i, new Vector3(x, y, 0f));
+        }
+    }
+
+    public void CommitPreview(int id)
+    {
+        renderers.Add(id,preview);
+
+        if(previewCenter != null)
+        {
+            circleCenters.Add(id,previewCenter);
+        }
+
+        preview = null;
+        previewCenter = null;
+    }
+
+    public void CancelPreview()
+    {
+        if (preview != null)
+        {
+            Destroy(preview.gameObject);
+            preview = null;
+        }
+        if (previewCenter != null)
+        {
+            Destroy(previewCenter);
+            previewCenter = null;
+        }
+    }
+
 
     public void RemoveDrawing(int id)
     {
@@ -32,6 +103,8 @@ public class DrawingView : MonoBehaviour
 
     public void Clear()
     {
+        CancelPreview();
+
         foreach (LineRenderer renderer in renderers.Values)
         {
             Destroy(renderer.gameObject);
@@ -44,5 +117,16 @@ public class DrawingView : MonoBehaviour
 
         renderers.Clear();
         circleCenters.Clear();
+    }
+
+
+
+    void ConfigureRenderer(LineRenderer renderer)
+    {
+        renderer.useWorldSpace = true;
+        renderer.startColor = lineColor;
+        renderer.endColor = lineColor;
+        renderer.startWidth = lineWidth;
+        renderer.endWidth = lineWidth;
     }
 }
