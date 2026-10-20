@@ -24,10 +24,10 @@ public static class IntersectionCalculator
     static public List<Vector2> GetLineLineIntersection(LineData line1, LineData line2)
     {
         List<Vector2> results = new();
-        Vector2 p = line1.start;
-        Vector2 r = line1.end - line1.start;
-        Vector2 q = line2.start;
-        Vector2 s = line2.end - line2.start;
+        Vector2 p = line1.Start;
+        Vector2 r = line1.End - line1.Start;
+        Vector2 q = line2.Start;
+        Vector2 s = line2.End - line2.Start;
 
         float cross = Cross(r, s);
         if (Mathf.Abs(cross) < ParallelEpsilon) return results;
@@ -47,14 +47,14 @@ public static class IntersectionCalculator
     static public List<Vector2> GetLineCircleIntersections(LineData line, CircleData circle)
     {
         List<Vector2> results = new();
-        Vector2 direction = line.end - line.start;
-        Vector2 offset = line.start - circle.center;
+        Vector2 direction = line.End - line.Start;
+        Vector2 offset = line.Start - circle.Center;
 
         float a = Vector2.Dot(direction, direction);
         if (a < ParallelEpsilon * ParallelEpsilon) return results;
 
         float b = 2f * Vector2.Dot(offset, direction);
-        float c = Vector2.Dot(offset, offset) - circle.radius * circle.radius;
+        float c = Vector2.Dot(offset, offset) - circle.Radius * circle.Radius;
         float discriminant = b * b - 4f * a * c;
         if (discriminant < 0f) return results;
 
@@ -64,12 +64,12 @@ public static class IntersectionCalculator
 
         if (t1 >= 0f && t1 <= 1f)
         {
-            results.Add(line.start + t1 * direction);
+            results.Add(line.Start + t1 * direction);
         }
 
         if (t2 >= 0f && t2 <= 1f && !Approximately(t1, t2))
         {
-            results.Add(line.start + t2 * direction);
+            results.Add(line.Start + t2 * direction);
         }
 
         return results;
@@ -78,20 +78,20 @@ public static class IntersectionCalculator
     static public List<Vector2> GetCircleCircleIntersections(CircleData circle1, CircleData circle2)
     {
         List<Vector2> results = new();
-        Vector2 diff = circle2.center - circle1.center;
+        Vector2 diff = circle2.Center - circle1.Center;
         float distance = diff.magnitude;
 
         if (distance < ParallelEpsilon) return results;
-        if (distance > circle1.radius + circle2.radius) return results;
-        if (distance < Mathf.Abs(circle1.radius - circle2.radius)) return results;
+        if (distance > circle1.Radius + circle2.Radius) return results;
+        if (distance < Mathf.Abs(circle1.Radius - circle2.Radius)) return results;
 
-        float a = (circle1.radius * circle1.radius - circle2.radius * circle2.radius + distance * distance)
+        float a = (circle1.Radius * circle1.Radius - circle2.Radius * circle2.Radius + distance * distance)
             / (2f * distance);
-        float hSquared = Mathf.Max(0f, circle1.radius * circle1.radius - a * a);
+        float hSquared = Mathf.Max(0f, circle1.Radius * circle1.Radius - a * a);
         float h = Mathf.Sqrt(hSquared);
 
         Vector2 direction = diff / distance;
-        Vector2 middle = circle1.center + direction * a;
+        Vector2 middle = circle1.Center + direction * a;
         Vector2 perpendicular = new(-direction.y, direction.x);
         Vector2 point1 = middle + perpendicular * h;
         Vector2 point2 = middle - perpendicular * h;

@@ -8,7 +8,7 @@ public class DrawingData
     private readonly Dictionary<int, CircleData> circleDataList = new();
 
 
-    private readonly GetIntersection getIntersection = new();
+    private readonly SnapPointStore snapPoints = new();
 
     public void AddLine(int currentIndex, Vector2 startPos, Vector2 endPos)
     {
@@ -35,7 +35,7 @@ public class DrawingData
     {
         foreach (Vector2 point in points)
         {
-            getIntersection.AddIntersection(currentIndex, point);
+            snapPoints.Add(currentIndex, point);
         }
     }
 
@@ -65,7 +65,7 @@ public class DrawingData
     {
         lineDataList.Clear();
         circleDataList.Clear();
-        getIntersection.Clear();
+        snapPoints.Clear();
     }
 
     public void UndoData(int currentIndex)
@@ -79,7 +79,7 @@ public class DrawingData
             circleDataList.Remove(currentIndex);
         }
 
-        getIntersection.UndoIntersection(currentIndex);
+        snapPoints.RemoveCreatedBy(currentIndex);
     }
 
     public void GridData(List<Vector2> intersections, List<LineData> lines)
@@ -93,6 +93,6 @@ public class DrawingData
 
     public Vector2 Snap(Vector2 position)
     {
-        return getIntersection.Snap(position);
+        return snapPoints.Snap(position);
     }
 }
