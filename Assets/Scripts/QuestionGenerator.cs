@@ -33,7 +33,7 @@ public static class QuestionGenerator
                 return new Fraction(numerator: new List<Monomial>
                 {
                     new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
-                    new Monomial(number:Random.Range(-1,-10)),
+                    new Monomial(number:-Random.Range(1,10)),
                 });
             case 6: // 1 ÷ √a
                 return new Fraction(
@@ -61,17 +61,30 @@ public static class QuestionGenerator
 
         }
 
-        return new Fraction(numerator: new List<Monomial> { });
+        throw new System.ArgumentOutOfRangeException(
+            nameof(level),
+            level,
+            "問題生成が定義されていない難易度です。"
+        );
     }
 
     static List<int> rootInNumbers = new List<int> { 2, 3, 5, 6, 7, 10, 11, 13, 14, 15, 17, 19, 21, 22, 23, 26, 29, 30, 31, 33, 34, 35, 37, 38, 39 };
     static int ChooseRootNumber(int min, int max)
     {
         List<int> numbers = new();
-        foreach (int num in rootInNumbers)
+
+        foreach (int number in rootInNumbers)
         {
-            if (min <= num && num <= max) numbers.Add(num);
+            if (min <= number && number <= max) numbers.Add(number);
+
         }
-        return numbers[Random.Range(1, numbers.Count - 1)];
+        if (numbers.Count == 0)
+        {
+            throw new System.InvalidOperationException(
+                $"根号内の候補がありません。範囲: {min}～{max}"
+            );
+        }
+
+        return numbers[Random.Range(0, numbers.Count)];
     }
 }

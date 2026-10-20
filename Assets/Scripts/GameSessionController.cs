@@ -6,6 +6,8 @@ public class GameSessionController : MonoBehaviour
     [SerializeField] DrawingManager drawingManager;
     [SerializeField] UIManager uiManager;
 
+    bool stageTransitionPending;
+
     void OnEnable()
     {
         drawingManager.LineCompleted += HandleLineCompleted;
@@ -24,24 +26,33 @@ public class GameSessionController : MonoBehaviour
     }
     void HandleLineCompleted(float length)
     {
+        if (stageTransitionPending) return;
+
         var result = questionManager.CheckAnswer(length);
 
-        if (result.stageCompleted)
-        {
-            AdvanceToNextStage();
-            return;
-        }
-
+        // 最後の正解も、移行に失敗した場合にUndoできないようにする。
         if (result.solvedAny)
         {
             drawingManager.LockUndoThroughCurrentDrawing();
+        }
+
+        if (result.stageCompleted)
+        {
+            stageTransitionPending = true;
+            AdvanceToNextStage();
         }
     }
 
     void AdvanceToNextStage()
     {
+        if (!questionManager.TryAdvanceStage())
+        {
+            return;
+        }
+
+        stageTransitionPending = false;
+
         uiManager.MoveConveyorUI();
-        questionManager.AdvanceStage();
         drawingManager.BeginStage();
     }
 
