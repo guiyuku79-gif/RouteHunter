@@ -4,7 +4,7 @@ using UnityEngine;
 public class SnapPointStore
 {
     const float DuplicateEpsilon = 0.0001f;
-    const float SnapRadius = 0.1f;
+    const float SnapRadius = 0.12f;
 
     private readonly List<(int createdById, Vector2 position)> points = new();
 
