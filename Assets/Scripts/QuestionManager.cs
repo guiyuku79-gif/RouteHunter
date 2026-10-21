@@ -9,7 +9,7 @@ public class QuestionManager : MonoBehaviour
 
     private readonly QuestionProgress progress = new();
 
-    void Start()
+    public void Initialize()
     {
         StartStage(spawnFromRight: false);
     }

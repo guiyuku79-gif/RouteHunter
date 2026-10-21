@@ -14,6 +14,8 @@ public class DrawingManager : MonoBehaviour
     // 現在描画中か
     bool drawing = false;
 
+    bool inputEnabled = true;
+
     float fixedRadius = 0;
 
     //現在の手数
@@ -30,10 +32,13 @@ public class DrawingManager : MonoBehaviour
     private readonly DrawingData drawingData = new DrawingData();
     DrawingView drawingView;
 
-    void Start()
+    void Awake()
     {
         drawingView = GetComponent<DrawingView>();
+    }
 
+    public void Initialize()
+    {
         CreateGrid();
         LineMode();
 
@@ -50,6 +55,8 @@ public class DrawingManager : MonoBehaviour
 
     void Update()
     {
+        if (!inputEnabled) return;
+
         // 描画開始
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
@@ -191,6 +198,7 @@ public class DrawingManager : MonoBehaviour
     }
     public void ResetBoard()
     {
+        if (!inputEnabled) return;
         CancelDrawing();
 
         drawingView.Clear();
@@ -213,6 +221,7 @@ public class DrawingManager : MonoBehaviour
 
     public void Undo()
     {
+        if (!inputEnabled) return;
         if (drawing) return;
         if (!CanUndo()) return;
 
@@ -226,7 +235,7 @@ public class DrawingManager : MonoBehaviour
 
     public bool CanUndo()
     {
-        return !(currentIndex <= undoBoundaryId);
+        return inputEnabled && currentIndex > undoBoundaryId;
     }
 
     public void LockUndoThroughCurrentDrawing()
@@ -254,10 +263,19 @@ public class DrawingManager : MonoBehaviour
 
     void SetMode(Constants.Mode newMode)
     {
+        if (!inputEnabled) return;
         if (drawing) return;
 
         mode = newMode;
         ModeChanged?.Invoke(mode);
+    }
+
+    public void StopInput()
+    {
+        inputEnabled = false;
+
+        CancelDrawing();
+        NotifyDrawingStateChanged();
     }
 
 }

@@ -5,14 +5,25 @@ public class GameSessionController : MonoBehaviour
     [SerializeField] QuestionManager questionManager;
     [SerializeField] DrawingManager drawingManager;
     [SerializeField] UIManager uiManager;
+    [SerializeField] GameStateManager gameStateManager;
 
     bool stageTransitionPending;
+
+    void Start()
+    {
+        questionManager.Initialize();
+        drawingManager.Initialize();
+        gameStateManager.StartTimer();
+    }
 
     void OnEnable()
     {
         drawingManager.LineCompleted += HandleLineCompleted;
         drawingManager.DrawingStateChanged += HandleDrawingStateChanged;
         drawingManager.ModeChanged += HandleModeChanged;
+
+        gameStateManager.TimeChanged += HandleTimeChanged;
+        gameStateManager.TimeExpired += HandleTimeExpired;
     }
 
     void OnDisable()
@@ -23,6 +34,9 @@ public class GameSessionController : MonoBehaviour
             drawingManager.DrawingStateChanged -= HandleDrawingStateChanged;
             drawingManager.ModeChanged -= HandleModeChanged;
         }
+
+        gameStateManager.TimeChanged -= HandleTimeChanged;
+        gameStateManager.TimeExpired -= HandleTimeExpired;
     }
     void HandleLineCompleted(float length)
     {
@@ -64,6 +78,16 @@ public class GameSessionController : MonoBehaviour
     void HandleModeChanged(Constants.Mode selectedMode)
     {
         uiManager.UpdateModeUI(selectedMode);
+    }
+
+    void HandleTimeChanged(int remainingSeconds)
+    {
+        uiManager.UpdateTimerUI(remainingSeconds);
+    }
+
+    void HandleTimeExpired()
+    {
+        drawingManager.StopInput();
     }
 
 }

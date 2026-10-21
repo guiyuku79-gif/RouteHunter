@@ -11,6 +11,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] SpriteRenderer undoButton;
     [SerializeField] TextMeshProUGUI moveUI;
     [SerializeField] GameObject beltConveyor;
+    [SerializeField] TextMeshProUGUI timerUI;
+
 
     public void UpdateModeUI(Constants.Mode selectedMode)
     {
@@ -57,5 +59,13 @@ public class UIManager : MonoBehaviour
         }
 
         beltConveyor.transform.position = start;
+    }
+
+    public void UpdateTimerUI(int remainingSeconds)
+    {
+        int minute = remainingSeconds / 60;
+        int second = remainingSeconds % 60;
+
+        timerUI.text = $"{minute:00}:{second:00}";
     }
 }
