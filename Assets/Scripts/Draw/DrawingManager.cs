@@ -26,7 +26,7 @@ public class DrawingManager : MonoBehaviour
 
     public event Action<float> LineCompleted;
     public event Action<int, bool> DrawingStateChanged;
-    public event Action<Constants.Mode> ModeChanged;
+    public event Action<Constants.Mode, bool> ModeChanged;
 
     //ほかのmanager
     private readonly DrawingData drawingData = new DrawingData();
@@ -163,6 +163,8 @@ public class DrawingManager : MonoBehaviour
 
         NotifyDrawingStateChanged();
 
+        ModeChanged?.Invoke(mode, fixedRadius != 0);
+
     }
 
     bool isLineOut(Vector2 position)
@@ -258,6 +260,7 @@ public class DrawingManager : MonoBehaviour
     }
     public void FixedCompassMode()
     {
+        if (fixedRadius == 0) return;
         SetMode(Constants.Mode.FixedCompass);
     }
 
@@ -267,7 +270,7 @@ public class DrawingManager : MonoBehaviour
         if (drawing) return;
 
         mode = newMode;
-        ModeChanged?.Invoke(mode);
+        ModeChanged?.Invoke(mode, fixedRadius != 0);
     }
 
     public void StopInput()

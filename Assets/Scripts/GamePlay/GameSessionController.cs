@@ -75,9 +75,9 @@ public class GameSessionController : MonoBehaviour
         uiManager.UpdateMoveUI(currentMoves, questionManager.GetTargetMoves(), canUndo);
     }
 
-    void HandleModeChanged(Constants.Mode selectedMode)
+    void HandleModeChanged(Constants.Mode selectedMode, bool isFixedCompassAvailable)
     {
-        uiManager.UpdateModeUI(selectedMode);
+        uiManager.UpdateModeUI(selectedMode,isFixedCompassAvailable);
     }
 
     void HandleTimeChanged(int remainingSeconds)

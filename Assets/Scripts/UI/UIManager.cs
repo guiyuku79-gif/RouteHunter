@@ -4,32 +4,41 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] GameObject compassButton;
+    [SerializeField] GameObject lineButton;
+    [SerializeField] GameObject fixedCompassButton;
+    [SerializeField] GameObject selectedSign;
 
-    [SerializeField] SpriteRenderer compassButton;
-    [SerializeField] SpriteRenderer lineButton;
-    [SerializeField] SpriteRenderer fixedCompassButton;
+    [SerializeField] SpriteRenderer compassButtonSprite;
+    [SerializeField] SpriteRenderer lineButtonSprite;
+    [SerializeField] SpriteRenderer fixedCompassButtonSprite;
     [SerializeField] SpriteRenderer undoButton;
     [SerializeField] TextMeshProUGUI moveUI;
     [SerializeField] GameObject beltConveyor;
     [SerializeField] TextMeshProUGUI timerUI;
 
 
-    public void UpdateModeUI(Constants.Mode selectedMode)
+    public void UpdateModeUI(Constants.Mode selectedMode, bool isFixedCompassAvailable)
     {
-        lineButton.color =
-            selectedMode == Constants.Mode.Line
-                ? Color.gray
-                : Color.white;
+        fixedCompassButtonSprite.color =
+            isFixedCompassAvailable
+                ? Color.white
+                : Color.gray;
 
-        compassButton.color =
-            selectedMode == Constants.Mode.Compass
-                ? Color.gray
-                : Color.white;
 
-        fixedCompassButton.color =
-            selectedMode == Constants.Mode.FixedCompass
-                ? Color.gray
-                : Color.white;
+        if (selectedMode == Constants.Mode.Line)
+        {
+            selectedSign.transform.position = lineButton.transform.position;
+        }
+        if (selectedMode == Constants.Mode.Compass)
+        {
+            selectedSign.transform.position = compassButton.transform.position;
+        }
+        if (selectedMode == Constants.Mode.FixedCompass)
+        {
+            selectedSign.transform.position = fixedCompassButton.transform.position;
+        }
+
     }
 
     public void UpdateMoveUI(int currentMoves, int targetMoves, bool canUndo)
