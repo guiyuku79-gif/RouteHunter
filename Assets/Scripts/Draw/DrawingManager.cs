@@ -130,6 +130,13 @@ public class DrawingManager : MonoBehaviour
             return;
         }
 
+        //小さすぎる線は消す
+        if (Vector2.Distance(startPos, endPos) <= 0.1f)
+        {
+            drawingView.CancelPreview();
+            return;
+        }
+
         currentIndex++;
 
         if (mode == Constants.Mode.Line)
