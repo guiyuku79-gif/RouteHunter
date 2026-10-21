@@ -26,7 +26,7 @@ public class DrawingManager : MonoBehaviour
 
     public event Action<float> LineCompleted;
     public event Action<int, bool> DrawingStateChanged;
-    public event Action<Constants.Mode, bool> ModeChanged;
+    public event Action<Constants.Mode, bool, CircleData> ModeChanged;
 
     //ほかのmanager
     private readonly DrawingData drawingData = new DrawingData();
@@ -170,7 +170,7 @@ public class DrawingManager : MonoBehaviour
 
         NotifyDrawingStateChanged();
 
-        ModeChanged?.Invoke(mode, fixedRadius != 0);
+        ModeChanged?.Invoke(mode, fixedRadius != 0, drawingData.LatestCircleData());
 
     }
 
@@ -277,7 +277,7 @@ public class DrawingManager : MonoBehaviour
         if (drawing) return;
 
         mode = newMode;
-        ModeChanged?.Invoke(mode, fixedRadius != 0);
+        ModeChanged?.Invoke(mode, fixedRadius != 0, drawingData.LatestCircleData());
     }
 
     public void StopInput()

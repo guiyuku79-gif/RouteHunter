@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DrawingData
@@ -94,5 +95,11 @@ public class DrawingData
     public Vector2 Snap(Vector2 position)
     {
         return snapPoints.Snap(position);
+    }
+
+    public CircleData LatestCircleData()
+    {
+        if(circleDataList.Count == 0) return null;
+        return circleDataList[circleDataList.Keys.Max()];
     }
 }

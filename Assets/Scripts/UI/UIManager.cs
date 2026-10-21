@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.Rendering;
 
 public class UIManager : MonoBehaviour
 {
@@ -9,22 +10,20 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject fixedCompassButton;
     [SerializeField] GameObject selectedSign;
 
-    [SerializeField] SpriteRenderer compassButtonSprite;
-    [SerializeField] SpriteRenderer lineButtonSprite;
     [SerializeField] SpriteRenderer fixedCompassButtonSprite;
     [SerializeField] SpriteRenderer undoButton;
     [SerializeField] TextMeshProUGUI moveUI;
     [SerializeField] GameObject beltConveyor;
     [SerializeField] TextMeshProUGUI timerUI;
 
+    [SerializeField] LineRenderer HighlightCircle;
 
-    public void UpdateModeUI(Constants.Mode selectedMode, bool isFixedCompassAvailable)
+    public void UpdateModeUI(Constants.Mode selectedMode, bool isFixedCompassAvailable, CircleData circleData)
     {
         fixedCompassButtonSprite.color =
             isFixedCompassAvailable
                 ? Color.white
                 : Color.gray;
-
 
         if (selectedMode == Constants.Mode.Line)
         {
@@ -37,6 +36,18 @@ public class UIManager : MonoBehaviour
         if (selectedMode == Constants.Mode.FixedCompass)
         {
             selectedSign.transform.position = fixedCompassButton.transform.position;
+        }
+
+        //直近の円をハイライト
+        if (selectedMode == Constants.Mode.FixedCompass)
+        {
+            HighlightCircle.positionCount = 2;
+            HighlightCircle.SetPosition(0, circleData.Center);
+            HighlightCircle.SetPosition(1, circleData.Center + Vector2.right * circleData.Radius);
+        }
+        else
+        {
+            HighlightCircle.positionCount = 0;
         }
 
     }
