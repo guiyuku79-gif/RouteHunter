@@ -32,6 +32,9 @@ public class DrawingManager : MonoBehaviour
     private readonly DrawingData drawingData = new DrawingData();
     DrawingView drawingView;
 
+    private Pointer drawingPointer;
+    private Vector2 pointerScreenPosition;
+
     void Awake()
     {
         drawingView = GetComponent<DrawingView>();
@@ -53,31 +56,102 @@ public class DrawingManager : MonoBehaviour
         drawingData.GridData(gridLines.intersections, gridLines.lines);
     }
 
+    // void Update()
+    // {
+    //     if (!inputEnabled) return;
+
+    //     // 描画開始
+    //     if (Mouse.current.leftButton.wasPressedThisFrame)
+    //     {
+    //         StartDrawing();
+    //     }
+
+    //     if (drawing)
+    //     {
+    //         UpdateDrawing();
+    //         if (Mouse.current.leftButton.wasReleasedThisFrame)
+    //         {
+    //             FinishDrawing();
+    //         }
+    //     }
+    //     else
+    //     {
+    //         if (Keyboard.current.lKey.wasPressedThisFrame) LineMode();
+    //         if (Keyboard.current.cKey.wasPressedThisFrame) CompassMode();
+    //         if (Keyboard.current.zKey.wasPressedThisFrame) Undo();
+    //     }
+    // }
+
     void Update()
     {
         if (!inputEnabled) return;
 
-        // 描画開始
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            StartDrawing();
-        }
+        // 描画中は、開始したデバイスを使い続ける
+        Pointer pointer = drawing ? drawingPointer : Pointer.current;
 
-        if (drawing)
+        if (pointer != null)
         {
-            UpdateDrawing();
-            if (Mouse.current.leftButton.wasReleasedThisFrame)
+            pointerScreenPosition = pointer.position.ReadValue();
+
+            if (!drawing && pointer.press.wasPressedThisFrame)
             {
-                FinishDrawing();
+                drawingPointer = pointer;
+                StartDrawing();
+            }
+
+            if (drawing)
+            {
+                // タッチがOSやブラウザによって中断された場合
+                bool touchCanceled =
+                    pointer is Touchscreen touchscreen &&
+                    touchscreen.primaryTouch.phase.ReadValue()
+                        == UnityEngine.InputSystem.TouchPhase.Canceled;
+
+                if (touchCanceled)
+                {
+                    CancelDrawing();
+                }
+                else
+                {
+                    UpdateDrawing();
+
+                    if (pointer.press.wasReleasedThisFrame)
+                    {
+                        FinishDrawing();
+                    }
+                    else if (!pointer.press.isPressed)
+                    {
+                        // 入力が途切れた場合はプレビューを破棄
+                        CancelDrawing();
+                    }
+                }
             }
         }
-        else
+        else if (drawing)
         {
-            if (Keyboard.current.lKey.wasPressedThisFrame) LineMode();
-            if (Keyboard.current.cKey.wasPressedThisFrame) CompassMode();
-            if (Keyboard.current.zKey.wasPressedThisFrame) Undo();
+            CancelDrawing();
+        }
+
+        // キーボードのない端末でもエラーにしない
+        var keyboard = Keyboard.current;
+        if (!drawing && keyboard != null)
+        {
+            if (keyboard.lKey.wasPressedThisFrame) LineMode();
+            if (keyboard.cKey.wasPressedThisFrame) CompassMode();
+            if (keyboard.zKey.wasPressedThisFrame) Undo();
         }
     }
+
+    // 別タブへの移動などで描画が残るのを防ぐ
+    void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus && drawing)
+        {
+            CancelDrawing();
+        }
+    }
+
+
 
 
     void StartDrawing()
@@ -182,19 +256,18 @@ public class DrawingManager : MonoBehaviour
     }
 
     // マウス座標 → ワールド座標
+    // マウスまたはタッチの画面座標 → ワールド座標
     Vector2 GetMouseWorldPosition()
     {
-        Vector2 mousePosition =
-            Mouse.current.position.ReadValue();
+        Camera cam = Camera.main;
 
-        Vector3 worldPosition =
-            Camera.main.ScreenToWorldPoint(
-                new Vector3(
-                    mousePosition.x,
-                    mousePosition.y,
-                    -Camera.main.transform.position.z
-                )
-            );
+        Vector3 worldPosition = cam.ScreenToWorldPoint(
+            new Vector3(
+                pointerScreenPosition.x,
+                pointerScreenPosition.y,
+                -cam.transform.position.z
+            )
+        );
 
         return new Vector2(worldPosition.x, worldPosition.y);
     }
