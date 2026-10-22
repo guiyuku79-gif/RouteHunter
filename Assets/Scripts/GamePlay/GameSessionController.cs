@@ -52,7 +52,6 @@ public class GameSessionController : MonoBehaviour
         if (result.solvedAny)
         {
             drawingManager.LockUndoThroughCurrentDrawing();
-
         }
 
         if (result.stageCompleted)
@@ -93,6 +92,7 @@ public class GameSessionController : MonoBehaviour
     void HandleTimeExpired()
     {
         drawingManager.StopInput();
+        uiManager.ShowResultUI(questionManager.Score);
     }
 
     void HandleScoreChanged()

@@ -17,6 +17,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI timerUI;
     [SerializeField] TextMeshProUGUI scoreUI;
 
+    [SerializeField] GameObject resultUI;
+    [SerializeField] TextMeshProUGUI finalScoreUI;
+
     [SerializeField] LineRenderer HighlightCircle;
 
     public void UpdateModeUI(Constants.Mode selectedMode, bool isFixedCompassAvailable, CircleData circleData)
@@ -93,5 +96,11 @@ public class UIManager : MonoBehaviour
     public void UpdateScoreUI(int score)
     {
         scoreUI.text = $"Score : {score}";
+    }
+
+    public void ShowResultUI(int score)
+    {
+        resultUI.SetActive(true);
+        finalScoreUI.text = $"Score : {score}";
     }
 }
