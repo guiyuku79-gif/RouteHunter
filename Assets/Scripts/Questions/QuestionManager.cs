@@ -7,6 +7,9 @@ public class QuestionManager : MonoBehaviour
     [SerializeField] QuestionView questionView;
     [SerializeField] private int stageLevel = 1;
 
+    private int score = 0;
+    public int Score => score;
+
     private readonly QuestionProgress progress = new();
 
     public void Initialize()
@@ -40,6 +43,8 @@ public class QuestionManager : MonoBehaviour
         {
             Debug.Log($"{index}番目の長さが完成");
             questionView.ShowSolved(index);
+
+            score += 1;
         }
 
         return (

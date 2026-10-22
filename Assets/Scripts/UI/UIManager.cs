@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI moveUI;
     [SerializeField] GameObject beltConveyor;
     [SerializeField] TextMeshProUGUI timerUI;
+    [SerializeField] TextMeshProUGUI scoreUI;
 
     [SerializeField] LineRenderer HighlightCircle;
 
@@ -87,5 +88,10 @@ public class UIManager : MonoBehaviour
         int second = remainingSeconds % 60;
 
         timerUI.text = $"{minute:00}:{second:00}";
+    }
+
+    public void UpdateScoreUI(int score)
+    {
+        scoreUI.text = $"Score : {score}";
     }
 }

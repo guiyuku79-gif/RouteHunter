@@ -14,6 +14,8 @@ public class GameSessionController : MonoBehaviour
         questionManager.Initialize();
         drawingManager.Initialize();
         gameStateManager.StartTimer();
+
+        HandleScoreChanged();
     }
 
     void OnEnable()
@@ -44,10 +46,13 @@ public class GameSessionController : MonoBehaviour
 
         var result = questionManager.CheckAnswer(length);
 
+        HandleScoreChanged();
+
         // 最後の正解も、移行に失敗した場合にUndoできないようにする。
         if (result.solvedAny)
         {
             drawingManager.LockUndoThroughCurrentDrawing();
+
         }
 
         if (result.stageCompleted)
@@ -75,9 +80,9 @@ public class GameSessionController : MonoBehaviour
         uiManager.UpdateMoveUI(currentMoves, questionManager.GetTargetMoves(), canUndo);
     }
 
-    void HandleModeChanged(Constants.Mode selectedMode, bool isFixedCompassAvailable,CircleData circleData)
+    void HandleModeChanged(Constants.Mode selectedMode, bool isFixedCompassAvailable, CircleData circleData)
     {
-        uiManager.UpdateModeUI(selectedMode,isFixedCompassAvailable,circleData);
+        uiManager.UpdateModeUI(selectedMode, isFixedCompassAvailable, circleData);
     }
 
     void HandleTimeChanged(int remainingSeconds)
@@ -88,6 +93,11 @@ public class GameSessionController : MonoBehaviour
     void HandleTimeExpired()
     {
         drawingManager.StopInput();
+    }
+
+    void HandleScoreChanged()
+    {
+        uiManager.UpdateScoreUI(questionManager.Score);
     }
 
 }
