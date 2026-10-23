@@ -63,10 +63,13 @@ public class GameSessionController : MonoBehaviour
 
     void AdvanceToNextStage()
     {
-        if (!questionManager.TryAdvanceStage())
+        var result = questionManager.TryAdvanceStage();
+        if (!result.canAdvanced)
         {
             return;
         }
+
+        gameStateManager.AddExtraTime(drawingManager.CurrentMoves, result.currentTargetMoves);
 
         stageTransitionPending = false;
 

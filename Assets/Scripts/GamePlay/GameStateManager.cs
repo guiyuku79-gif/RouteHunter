@@ -31,4 +31,12 @@ public class GameStateManager : MonoBehaviour
 
         TimeExpired?.Invoke();
     }
+
+    public void AddExtraTime(int currentMoves, int targetMoves)
+    {
+        if (currentMoves < targetMoves)
+        {
+            timer += (targetMoves - currentMoves) * 10;
+        }
+    }
 }

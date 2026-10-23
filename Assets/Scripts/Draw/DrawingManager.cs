@@ -20,6 +20,7 @@ public class DrawingManager : MonoBehaviour
 
     //現在の手数
     int currentMoves = 0;
+    public int CurrentMoves => currentMoves;
 
     //これより前にはUndoできない
     int undoBoundaryId = 0;

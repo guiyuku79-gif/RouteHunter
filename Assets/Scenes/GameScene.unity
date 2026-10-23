@@ -475,7 +475,7 @@ MonoBehaviour:
   lineColor:
     serializedVersion: 2
     rgba: 4281019179
-  lineWidth: 0.05
+  lineWidth: 0.08
 --- !u!114 &106621522
 MonoBehaviour:
   m_ObjectHideFlags: 0
