@@ -353,6 +353,7 @@ GameObject:
   - component: {fileID: 106621520}
   - component: {fileID: 106621521}
   - component: {fileID: 106621522}
+  - component: {fileID: 106621523}
   m_Layer: 0
   m_Name: DrawingManager
   m_TagString: Untagged
@@ -489,6 +490,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestionView
   boxPrefab: {fileID: 3422521317982901422, guid: 47f1216c8b3b3354db56d56b7ccc3e67, type: 3}
+--- !u!114 &106621523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106621513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba544826cbff5874a88f991b6d5273fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DrawingInput
+  drawingCamera: {fileID: 519420031}
 --- !u!1 &220403138
 GameObject:
   m_ObjectHideFlags: 0

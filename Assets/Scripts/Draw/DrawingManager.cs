@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class DrawingManager : MonoBehaviour
 {
@@ -12,9 +11,11 @@ public class DrawingManager : MonoBehaviour
     private Constants.Mode mode;
 
     // 現在描画中か
-    bool drawing = false;
+    bool isDrawing = false;
+    public bool IsDrawing => isDrawing;
 
-    bool inputEnabled = true;
+    bool isInputEnabled = true;
+    public bool IsInputEnabled => isInputEnabled;
 
     float fixedRadius = 0;
 
@@ -25,7 +26,7 @@ public class DrawingManager : MonoBehaviour
     //これより前にはUndoできない
     int undoBoundaryId = 0;
 
-    public event Action<int,LineData> LineCompleted;
+    public event Action<int, LineData> LineCompleted;
     public event Action<int, bool> DrawingStateChanged;
     public event Action<Constants.Mode, bool, CircleData> ModeChanged;
 
@@ -33,14 +34,12 @@ public class DrawingManager : MonoBehaviour
     private readonly DrawingData drawingData = new DrawingData();
     DrawingView drawingView;
 
-    private Pointer drawingPointer;
-    private Vector2 pointerScreenPosition;
-
     void Awake()
     {
         drawingView = GetComponent<DrawingView>();
     }
 
+    #region 初期化
     public void Initialize()
     {
         CreateGrid();
@@ -57,111 +56,18 @@ public class DrawingManager : MonoBehaviour
         drawingData.GridData(gridLines.intersections, gridLines.lines);
     }
 
-    // void Update()
-    // {
-    //     if (!inputEnabled) return;
+    #endregion
 
-    //     // 描画開始
-    //     if (Mouse.current.leftButton.wasPressedThisFrame)
-    //     {
-    //         StartDrawing();
-    //     }
-
-    //     if (drawing)
-    //     {
-    //         UpdateDrawing();
-    //         if (Mouse.current.leftButton.wasReleasedThisFrame)
-    //         {
-    //             FinishDrawing();
-    //         }
-    //     }
-    //     else
-    //     {
-    //         if (Keyboard.current.lKey.wasPressedThisFrame) LineMode();
-    //         if (Keyboard.current.cKey.wasPressedThisFrame) CompassMode();
-    //         if (Keyboard.current.zKey.wasPressedThisFrame) Undo();
-    //     }
-    // }
-
-    void Update()
+    #region 線と円の描画
+    public void BeginDrawing(Vector2 worldPosition)
     {
-        if (!inputEnabled) return;
+        if (!isInputEnabled || isDrawing) return;
 
-        // 描画中は、開始したデバイスを使い続ける
-        Pointer pointer = drawing ? drawingPointer : Pointer.current;
-
-        if (pointer != null)
-        {
-            pointerScreenPosition = pointer.position.ReadValue();
-
-            if (!drawing && pointer.press.wasPressedThisFrame)
-            {
-                drawingPointer = pointer;
-                StartDrawing();
-            }
-
-            if (drawing)
-            {
-                // タッチがOSやブラウザによって中断された場合
-                bool touchCanceled =
-                    pointer is Touchscreen touchscreen &&
-                    touchscreen.primaryTouch.phase.ReadValue()
-                        == UnityEngine.InputSystem.TouchPhase.Canceled;
-
-                if (touchCanceled)
-                {
-                    CancelDrawing();
-                }
-                else
-                {
-                    UpdateDrawing();
-
-                    if (pointer.press.wasReleasedThisFrame)
-                    {
-                        FinishDrawing();
-                    }
-                    else if (!pointer.press.isPressed)
-                    {
-                        // 入力が途切れた場合はプレビューを破棄
-                        CancelDrawing();
-                    }
-                }
-            }
-        }
-        else if (drawing)
-        {
-            CancelDrawing();
-        }
-
-        // キーボードのない端末でもエラーにしない
-        var keyboard = Keyboard.current;
-        if (!drawing && keyboard != null)
-        {
-            if (keyboard.lKey.wasPressedThisFrame) LineMode();
-            if (keyboard.cKey.wasPressedThisFrame) CompassMode();
-            if (keyboard.zKey.wasPressedThisFrame) Undo();
-        }
-    }
-
-    // 別タブへの移動などで描画が残るのを防ぐ
-    void OnApplicationFocus(bool hasFocus)
-    {
-        if (!hasFocus && drawing)
-        {
-            CancelDrawing();
-        }
-    }
-
-
-
-
-    void StartDrawing()
-    {
-        startPos = drawingData.Snap(GetMouseWorldPosition());
+        startPos = drawingData.Snap(worldPosition);
 
         if (isLineOut(startPos)) return;
 
-        drawing = true;
+        isDrawing = true;
 
         if (mode == Constants.Mode.Line)
         {
@@ -173,30 +79,33 @@ public class DrawingManager : MonoBehaviour
         }
     }
 
-    void UpdateDrawing()
+    public void UpdateDrawing(Vector2 worldPosition)
     {
-        Vector2 mousePos = GetMouseWorldPosition();
-        mousePos = drawingData.Snap(mousePos);
+        if (!isInputEnabled || !isDrawing) return;
+
+        Vector2 snappedPosition = drawingData.Snap(worldPosition);
 
         if (mode == Constants.Mode.Line)
         {
-            drawingView.UpdateLine(startPos, mousePos);
+            drawingView.UpdateLine(startPos, snappedPosition);
         }
         else
         {
             float radius = mode == Constants.Mode.FixedCompass
-            ? fixedRadius
-            : Vector2.Distance(startPos, mousePos);
+                ? fixedRadius
+                : Vector2.Distance(startPos, snappedPosition);
 
             drawingView.UpdateCircle(startPos, radius);
         }
     }
 
-    void FinishDrawing()
+    public void FinishDrawing(Vector2 worldPosition)
     {
-        Vector2 endPos = drawingData.Snap(GetMouseWorldPosition());
+        if (!isInputEnabled || !isDrawing) return;
 
-        drawing = false;
+        Vector2 endPos = drawingData.Snap(worldPosition);
+
+        isDrawing = false;
 
         //範囲外の線は消す
         if (isLineOut(startPos) || isLineOut(endPos))
@@ -224,7 +133,7 @@ public class DrawingManager : MonoBehaviour
             float length = Vector2.Distance(startPos, endPos);
             Debug.Log($"線分の長さ{length}");
 
-            LineCompleted?.Invoke(currentIndex,new LineData(startPos,endPos));
+            LineCompleted?.Invoke(currentIndex, new LineData(startPos, endPos));
 
         }
         else
@@ -237,7 +146,7 @@ public class DrawingManager : MonoBehaviour
             fixedRadius = radius;
 
             drawingView.UpdateCircle(startPos, radius);
-            drawingData.AddCircle(currentIndex, startPos, radius,mode);
+            drawingData.AddCircle(currentIndex, startPos, radius, mode);
             drawingView.CommitPreview(currentIndex);
 
             currentMoves++;
@@ -256,32 +165,18 @@ public class DrawingManager : MonoBehaviour
         return false;
     }
 
-    // マウス座標 → ワールド座標
-    // マウスまたはタッチの画面座標 → ワールド座標
-    Vector2 GetMouseWorldPosition()
+    public void CancelDrawing()
     {
-        Camera cam = Camera.main;
-
-        Vector3 worldPosition = cam.ScreenToWorldPoint(
-            new Vector3(
-                pointerScreenPosition.x,
-                pointerScreenPosition.y,
-                -cam.transform.position.z
-            )
-        );
-
-        return new Vector2(worldPosition.x, worldPosition.y);
-    }
-
-    void CancelDrawing()
-    {
-        drawing = false;
+        isDrawing = false;
         drawingView.CancelPreview();
 
     }
+
+    #endregion
+
     public void ResetBoard()
     {
-        if (!inputEnabled) return;
+        if (!isInputEnabled) return;
         CancelDrawing();
 
         drawingView.Clear();
@@ -304,8 +199,8 @@ public class DrawingManager : MonoBehaviour
 
     public void Undo()
     {
-        if (!inputEnabled) return;
-        if (drawing) return;
+        if (!isInputEnabled) return;
+        if (isDrawing) return;
         if (!CanUndo()) return;
 
         drawingData.UndoData(currentIndex);
@@ -318,7 +213,7 @@ public class DrawingManager : MonoBehaviour
 
     public bool CanUndo()
     {
-        return inputEnabled && currentIndex > undoBoundaryId;
+        return isInputEnabled && currentIndex > undoBoundaryId;
     }
 
     public void LockUndoThroughCurrentDrawing()
@@ -331,6 +226,7 @@ public class DrawingManager : MonoBehaviour
         DrawingStateChanged?.Invoke(currentMoves, CanUndo());
     }
 
+    #region  モード変更
     public void CompassMode()
     {
         SetMode(Constants.Mode.Compass);
@@ -347,16 +243,18 @@ public class DrawingManager : MonoBehaviour
 
     void SetMode(Constants.Mode newMode)
     {
-        if (!inputEnabled) return;
-        if (drawing) return;
+        if (!isInputEnabled) return;
+        if (isDrawing) return;
 
         mode = newMode;
         ModeChanged?.Invoke(mode, fixedRadius != 0, drawingData.LatestCircleData());
     }
 
+    #endregion
+    
     public void StopInput()
     {
-        inputEnabled = false;
+        isInputEnabled = false;
 
         CancelDrawing();
         NotifyDrawingStateChanged();
