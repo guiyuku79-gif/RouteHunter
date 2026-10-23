@@ -11,6 +11,8 @@ public class DrawingData
 
     private readonly SnapPointStore snapPoints = new();
 
+    public int FixedRadiusId { get; private set; }
+
     public void AddLine(int currentIndex, Vector2 startPos, Vector2 endPos)
     {
 
@@ -43,7 +45,7 @@ public class DrawingData
         }
     }
 
-    public void AddCircle(int currentIndex, Vector2 startPos, float radius)
+    public void AddCircle(int currentIndex, Vector2 startPos, float radius, Constants.Mode mode)
     {
 
         CircleData newCircle = new CircleData(startPos, radius);
@@ -63,6 +65,11 @@ public class DrawingData
 
         //円の中心
         AddIntersections(new List<Vector2> { startPos }, currentIndex);
+
+        if (mode == Constants.Mode.Compass)
+        {
+            FixedRadiusId = currentIndex;
+        }
 
         // 円を保存
         circleDataList.Add(currentIndex, newCircle);
@@ -106,6 +113,6 @@ public class DrawingData
     public CircleData LatestCircleData()
     {
         if (circleDataList.Count == 0) return null;
-        return circleDataList[circleDataList.Keys.Max()];
+        return circleDataList[FixedRadiusId];
     }
 }

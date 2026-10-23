@@ -237,7 +237,7 @@ public class DrawingManager : MonoBehaviour
             fixedRadius = radius;
 
             drawingView.UpdateCircle(startPos, radius);
-            drawingData.AddCircle(currentIndex, startPos, radius);
+            drawingData.AddCircle(currentIndex, startPos, radius,mode);
             drawingView.CommitPreview(currentIndex);
 
             currentMoves++;
