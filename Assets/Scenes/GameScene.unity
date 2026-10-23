@@ -3071,6 +3071,7 @@ Transform:
   m_Children:
   - {fileID: 106621514}
   - {fileID: 2005391736}
+  - {fileID: 1721611036}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1412997609
@@ -3704,6 +3705,51 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!1 &1721611035
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1721611036}
+  - component: {fileID: 1721611037}
+  m_Layer: 0
+  m_Name: LineEffectManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1721611036
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721611035}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -7.6172504, y: -1.9951, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1384697345}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1721611037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721611035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b43851b10989e7149aa73050d649f5fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LineEffectManager
+  lineEffectPrefab: {fileID: 0}
 --- !u!1 &1728056886
 GameObject:
   m_ObjectHideFlags: 0
@@ -4488,6 +4534,7 @@ MonoBehaviour:
   drawingManager: {fileID: 106621515}
   uiManager: {fileID: 106621517}
   gameStateManager: {fileID: 106621520}
+  lineEffectManager: {fileID: 1721611037}
 --- !u!4 &2005391736
 Transform:
   m_ObjectHideFlags: 0

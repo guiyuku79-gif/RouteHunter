@@ -6,6 +6,7 @@ public class GameSessionController : MonoBehaviour
     [SerializeField] DrawingManager drawingManager;
     [SerializeField] UIManager uiManager;
     [SerializeField] GameStateManager gameStateManager;
+    [SerializeField] LineEffectManager lineEffectManager;
 
     bool stageTransitionPending;
 
@@ -40,10 +41,11 @@ public class GameSessionController : MonoBehaviour
         gameStateManager.TimeChanged -= HandleTimeChanged;
         gameStateManager.TimeExpired -= HandleTimeExpired;
     }
-    void HandleLineCompleted(float length)
+    void HandleLineCompleted(int lineId, LineData lineData)
     {
         if (stageTransitionPending) return;
 
+        float length = Vector2.Distance(lineData.Start, lineData.End);
         var result = questionManager.CheckAnswer(length);
 
         HandleScoreChanged();
@@ -52,6 +54,9 @@ public class GameSessionController : MonoBehaviour
         if (result.solvedAny)
         {
             drawingManager.LockUndoThroughCurrentDrawing();
+
+            drawingManager.RemoveSolvedLine(lineId);
+            lineEffectManager.EffectCompletedLine(lineData, result.index);
         }
 
         if (result.stageCompleted)

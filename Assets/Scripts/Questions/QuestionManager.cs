@@ -35,21 +35,23 @@ public class QuestionManager : MonoBehaviour
         return StageRules.GetTargetMovesForStage(stageLevel);
     }
 
-    public (bool solvedAny, bool stageCompleted) CheckAnswer(float length)
+    public (bool solvedAny, bool stageCompleted, int index) CheckAnswer(float length)
     {
         var result = progress.CheckAnswer(length);
 
+        int completedIndex = -1;
         foreach (int index in result.solvedIndices)
         {
             Debug.Log($"{index}番目の長さが完成");
             questionView.ShowSolved(index);
-
+            completedIndex = index;
             score += 1;
         }
 
         return (
             result.solvedIndices.Count > 0,
-            result.stageCompleted
+            result.stageCompleted,
+            completedIndex
         );
     }
 

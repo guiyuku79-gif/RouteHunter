@@ -25,7 +25,7 @@ public class DrawingManager : MonoBehaviour
     //これより前にはUndoできない
     int undoBoundaryId = 0;
 
-    public event Action<float> LineCompleted;
+    public event Action<int,LineData> LineCompleted;
     public event Action<int, bool> DrawingStateChanged;
     public event Action<Constants.Mode, bool, CircleData> ModeChanged;
 
@@ -224,7 +224,7 @@ public class DrawingManager : MonoBehaviour
             float length = Vector2.Distance(startPos, endPos);
             Debug.Log($"線分の長さ{length}");
 
-            LineCompleted?.Invoke(length);
+            LineCompleted?.Invoke(currentIndex,new LineData(startPos,endPos));
 
         }
         else
@@ -360,6 +360,12 @@ public class DrawingManager : MonoBehaviour
 
         CancelDrawing();
         NotifyDrawingStateChanged();
+    }
+
+    public void RemoveSolvedLine(int lineId)
+    {
+        drawingData.UndoData(lineId);
+        drawingView.RemoveDrawing(lineId);
     }
 
 }
