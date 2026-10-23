@@ -2,15 +2,14 @@ using UnityEngine;
 
 public class LineEffectController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    LineRenderer lineRenderer;
+
     void Start()
     {
-        
+        lineRenderer = GetComponent<LineRenderer>();
     }
-
-    // Update is called once per frame
-    void Update()
+    public void Init(LineData lineData, int boxIndex)
     {
-        
+
     }
 }
