@@ -28,6 +28,9 @@ public class DrawingData
             AddIntersections(IntersectionCalculator.GetLineCircleIntersections(newLine, circle), currentIndex);
         }
 
+        //線の両端
+        AddIntersections(new List<Vector2> { startPos, endPos }, currentIndex);
+
         // 線分を保存
         lineDataList.Add(currentIndex, newLine);
     }
@@ -57,6 +60,9 @@ public class DrawingData
         {
             AddIntersections(IntersectionCalculator.GetCircleCircleIntersections(newCircle, circle), currentIndex);
         }
+
+        //円の中心
+        AddIntersections(new List<Vector2> { startPos }, currentIndex);
 
         // 円を保存
         circleDataList.Add(currentIndex, newCircle);
@@ -99,7 +105,7 @@ public class DrawingData
 
     public CircleData LatestCircleData()
     {
-        if(circleDataList.Count == 0) return null;
+        if (circleDataList.Count == 0) return null;
         return circleDataList[circleDataList.Keys.Max()];
     }
 }
