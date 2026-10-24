@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 using UnityEngine.Rendering;
+using UnityEngine.Timeline;
 
 public class UIManager : MonoBehaviour
 {
@@ -90,7 +91,19 @@ public class UIManager : MonoBehaviour
         int minute = remainingSeconds / 60;
         int second = remainingSeconds % 60;
 
-        timerUI.text = $"{minute:00}:{second:00}";
+        timerUI.text = $"  {minute:00}:{second:00}";
+    }
+
+    public void UpdateExtraTime(int remainingSeconds, int extraTime)
+    {
+
+        int minute = remainingSeconds / 60;
+        int second = remainingSeconds % 60;
+
+        int extraMinute = extraTime / 60;
+        int extraSecond = extraTime % 60;
+
+        timerUI.text = $"  {minute:00}:{second:00}\n+{extraMinute:00}:{extraSecond:00}";
     }
 
     public void UpdateScoreUI(int score)

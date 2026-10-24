@@ -69,7 +69,10 @@ public class GameSessionController : MonoBehaviour
 
     void AdvanceToNextStage()
     {
-        gameStateManager.AddExtraTime(drawingManager.CurrentMoves, questionManager.GetTargetMoves());
+        int extraTime = Mathf.Max(0, (questionManager.GetTargetMoves() - drawingManager.CurrentMoves) * 10);
+
+        gameStateManager.AddExtraTime(extraTime);
+        uiManager.UpdateExtraTime(gameStateManager.timer, extraTime);
 
         stageTransitionPending = false;
         StartCoroutine(WaitForNewStage());

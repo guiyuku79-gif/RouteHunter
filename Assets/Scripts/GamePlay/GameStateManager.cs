@@ -8,35 +8,54 @@ public class GameStateManager : MonoBehaviour
 
     public int timer;
 
+    private float timeCount;
+
+    private bool isTimerMoved = false;
+
     public event Action<int> TimeChanged;
     public event Action TimeExpired;
 
     public void StartTimer()
     {
         timer = maxTime;
+        isTimerMoved = true;
         TimeChanged?.Invoke(timer);
 
-        StartCoroutine(ChangeTime());
     }
 
-    IEnumerator ChangeTime()
+    void Update()
     {
-        while (timer > 0)
-        {
-            yield return new WaitForSeconds(1f);
+        if (!isTimerMoved) return;
 
+        timeCount += Time.deltaTime;
+        if (timeCount >= 1f)
+        {
+            timeCount = 0;
             timer--;
             TimeChanged?.Invoke(timer);
         }
 
-        TimeExpired?.Invoke();
+        if (timer <= 0f)
+        {
+            TimeExpired?.Invoke();
+            isTimerMoved = false;
+        }
+
+
     }
 
-    public void AddExtraTime(int currentMoves, int targetMoves)
+
+    public void AddExtraTime(int extraTime)
     {
-        if (currentMoves < targetMoves)
-        {
-            timer += (targetMoves - currentMoves) * 10;
-        }
+        StartCoroutine(WaitWhileMove(extraTime));
+    }
+
+    IEnumerator WaitWhileMove(int extraTime)
+    {
+        isTimerMoved = false;
+        yield return new WaitForSeconds(Constants.BoxMoveDuration + 1f);
+
+        timer += extraTime;
+        isTimerMoved = true;
     }
 }
