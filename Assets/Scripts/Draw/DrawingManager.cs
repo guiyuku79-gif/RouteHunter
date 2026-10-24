@@ -154,7 +154,7 @@ public class DrawingManager : MonoBehaviour
 
         NotifyDrawingStateChanged();
 
-        ModeChanged?.Invoke(mode, fixedRadius != 0, drawingData.LatestCircleData());
+        RefreshFixedCompass();
 
     }
 
@@ -189,6 +189,8 @@ public class DrawingManager : MonoBehaviour
         CreateGrid();
 
         NotifyDrawingStateChanged();
+
+        RefreshFixedCompass();
     }
 
     public void BeginStage()
@@ -209,6 +211,8 @@ public class DrawingManager : MonoBehaviour
         currentIndex--;
         currentMoves--;
         NotifyDrawingStateChanged();
+
+        RefreshFixedCompass();
     }
 
     public bool CanUndo()
@@ -247,11 +251,11 @@ public class DrawingManager : MonoBehaviour
         if (isDrawing) return;
 
         mode = newMode;
-        ModeChanged?.Invoke(mode, fixedRadius != 0, drawingData.LatestCircleData());
+        RefreshFixedCompass();
     }
 
     #endregion
-    
+
     public void StopInput()
     {
         isInputEnabled = false;
@@ -266,4 +270,18 @@ public class DrawingManager : MonoBehaviour
         drawingView.RemoveDrawing(lineId);
     }
 
+    void RefreshFixedCompass()
+    {
+        CircleData circle = drawingData.LatestCircleData();
+
+        fixedRadius = circle != null ? circle.Radius : 0f;
+
+        // 参照元がなくなったら通常コンパスに戻す
+        if (circle == null && mode == Constants.Mode.FixedCompass)
+        {
+            mode = Constants.Mode.Compass;
+        }
+
+        ModeChanged?.Invoke(mode, circle != null, circle);
+    }
 }

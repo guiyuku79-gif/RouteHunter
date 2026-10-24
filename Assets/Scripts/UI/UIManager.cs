@@ -43,7 +43,7 @@ public class UIManager : MonoBehaviour
         }
 
         //直近の円をハイライト
-        if (selectedMode == Constants.Mode.FixedCompass)
+        if (selectedMode == Constants.Mode.FixedCompass && circleData != null)
         {
             HighlightCircle.positionCount = 2;
             HighlightCircle.SetPosition(0, circleData.Center);

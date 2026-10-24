@@ -11,7 +11,12 @@ public class DrawingData
 
     private readonly SnapPointStore snapPoints = new();
 
-    public int FixedRadiusId { get; private set; }
+    //通常コンパスのId
+    private readonly SortedSet<int> compassIds = new();
+
+    public int FixedRadiusId =>
+        compassIds.Count > 0 ? compassIds.Max : -1;
+
 
     public void AddLine(int currentIndex, Vector2 startPos, Vector2 endPos)
     {
@@ -68,7 +73,7 @@ public class DrawingData
 
         if (mode == Constants.Mode.Compass)
         {
-            FixedRadiusId = currentIndex;
+            compassIds.Add(currentIndex);
         }
 
         // 円を保存
@@ -80,6 +85,7 @@ public class DrawingData
         lineDataList.Clear();
         circleDataList.Clear();
         snapPoints.Clear();
+        compassIds.Clear();
     }
 
     public void UndoData(int currentIndex)
@@ -91,6 +97,8 @@ public class DrawingData
         else
         {
             circleDataList.Remove(currentIndex);
+
+            compassIds.Remove(currentIndex);
         }
 
         snapPoints.RemoveCreatedBy(currentIndex);
@@ -112,7 +120,8 @@ public class DrawingData
 
     public CircleData LatestCircleData()
     {
-        if (circleDataList.Count == 0) return null;
-        return circleDataList[FixedRadiusId];
+        return circleDataList.TryGetValue(FixedRadiusId, out var circle)
+            ? circle
+            : null;
     }
 }
