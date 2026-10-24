@@ -115,7 +115,7 @@ public class DrawingManager : MonoBehaviour
         }
 
         //小さすぎる線は消す
-        if (Vector2.Distance(startPos, endPos) <= 0.1f)
+        if (Vector2.Distance(startPos, endPos) <= 0.1f && !(mode == Constants.Mode.FixedCompass))
         {
             drawingView.CancelPreview();
             return;
