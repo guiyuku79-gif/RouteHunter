@@ -14,7 +14,7 @@ public class QuestionManager : MonoBehaviour
 
     public void Initialize()
     {
-        StartStage(spawnFromRight: false);
+        StartStage(spawnFromRight: true);
     }
 
     void StartStage(bool spawnFromRight)

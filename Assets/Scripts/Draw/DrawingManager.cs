@@ -40,11 +40,16 @@ public class DrawingManager : MonoBehaviour
     }
 
     #region 初期化
-    public void Initialize()
+
+    public void TitleInitialize()
     {
         CreateGrid();
+        isInputEnabled = false;
+    }
+    public void Initialize()
+    {
+        isInputEnabled = true;
         LineMode();
-
         currentMoves = 0;
 
         NotifyDrawingStateChanged();

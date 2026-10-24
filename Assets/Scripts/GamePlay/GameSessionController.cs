@@ -8,16 +8,34 @@ public class GameSessionController : MonoBehaviour
     [SerializeField] UIManager uiManager;
     [SerializeField] GameStateManager gameStateManager;
     [SerializeField] LineEffectManager lineEffectManager;
+    [SerializeField] TitleUIManager titleUIManager;
 
     bool stageTransitionPending;
 
     void Start()
     {
+        drawingManager.TitleInitialize();
+    }
+
+    public void GameStart()
+    {
         questionManager.Initialize();
         drawingManager.Initialize();
         gameStateManager.StartTimer();
+        uiManager.MoveConveyorUI();
+        titleUIManager.RemoveTitleUI();
 
         HandleScoreChanged();
+    }
+
+    public void ShowHowToPlay()
+    {
+        titleUIManager.ShowHowToPlay();
+    }
+
+    public void ReturnTitle()
+    {
+        titleUIManager.CloseHowToPlay();
     }
 
     void OnEnable()
