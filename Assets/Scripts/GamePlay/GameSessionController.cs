@@ -76,7 +76,7 @@ public class GameSessionController : MonoBehaviour
     }
     IEnumerator WaitForNewStage()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.2f);
         questionManager.TryAdvanceStage();
         uiManager.MoveConveyorUI();
         drawingManager.BeginStage();

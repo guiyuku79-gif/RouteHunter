@@ -59,7 +59,7 @@ public class UIManager : MonoBehaviour
     public void UpdateMoveUI(int currentMoves, int targetMoves, bool canUndo)
     {
         //手数の表示
-        moveUI.text = $"{currentMoves} moves\ntargetMoves {targetMoves}";
+        moveUI.text = $"現在 {currentMoves}手\n目標 {targetMoves}手";
         //戻るボタンの表示
         if (canUndo) undoButton.color = Color.white;
         else undoButton.color = Color.gray;

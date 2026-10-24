@@ -62,7 +62,7 @@ public class BoxManager : MonoBehaviour
     }
     IEnumerator WaitCloseBox()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.2f);
         GetComponent<SpriteRenderer>().sprite = closedBox;
     }
 
