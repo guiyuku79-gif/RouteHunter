@@ -26,7 +26,7 @@ public class QuestionView : MonoBehaviour
 
             GameObject boxObject = Instantiate(
                 boxPrefab,
-                new Vector3(spawnX, Constants.BoxY, 0f),
+                new Vector3(spawnX, Constants.BoxY - 0.4f, 0f),
                 Quaternion.identity
             );
 
