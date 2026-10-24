@@ -13,27 +13,27 @@ public static class QuestionGenerator
                 {
                     new Monomial(number:Random.Range(1,10))
                 });
-            case 2://√a
+            case 2://√a 1~10
                 return new Fraction(numerator: new List<Monomial>
                 {
                     new Monomial(number:ChooseRootNumber(1,10),isRotted:true)
                 });
-            case 3://a√b
+            case 3://√a-b
+                return new Fraction(numerator: new List<Monomial>
+                {
+                    new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
+                    new Monomial(number:-Random.Range(1,4)),
+                });
+            case 4://a√b
                 return new Fraction(numerator: new List<Monomial>
                 {
                     new Monomial(Coefficient:Random.Range(2,5),number:ChooseRootNumber(1,10),isRotted:true)
                 });
-            case 4://√a+√b
+            case 5://√a+√b
                 return new Fraction(numerator: new List<Monomial>
                 {
                     new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
                     new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
-                });
-            case 5://√a-b
-                return new Fraction(numerator: new List<Monomial>
-                {
-                    new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
-                    new Monomial(number:-Random.Range(1,10)),
                 });
             case 6: // 1 ÷ √a
                 return new Fraction(
@@ -46,12 +46,19 @@ public static class QuestionGenerator
                         new Monomial(number:ChooseRootNumber(2,6),isRotted:true),
                     }
                 );
-            case 7:// √a+√b ÷ c
+            case 7:// √a 11~30
                 return new Fraction(
                     numerator: new List<Monomial>
                     {
-                        new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
-                        new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
+                        new Monomial(number:ChooseRootNumber(11,30),isRotted:true),
+                    }
+                );
+            case 8:// √a+√b ÷ c
+                return new Fraction(
+                    numerator: new List<Monomial>
+                    {
+                        new Monomial(number:ChooseRootNumber(1,15),isRotted:true),
+                        new Monomial(number:ChooseRootNumber(1,15),isRotted:true),
                     },
                     denominator: new List<Monomial>
                     {

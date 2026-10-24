@@ -456,7 +456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52bf31bae62954d4fad0eb570c89ae24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStateManager
-  maxTime: 30
+  maxTime: 300
   timer: 0
 --- !u!114 &106621521
 MonoBehaviour:
