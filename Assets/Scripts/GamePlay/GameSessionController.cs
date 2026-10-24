@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameSessionController : MonoBehaviour
@@ -68,16 +69,15 @@ public class GameSessionController : MonoBehaviour
 
     void AdvanceToNextStage()
     {
-        var result = questionManager.TryAdvanceStage();
-        if (!result.canAdvanced)
-        {
-            return;
-        }
-
-        gameStateManager.AddExtraTime(drawingManager.CurrentMoves, result.currentTargetMoves);
+        gameStateManager.AddExtraTime(drawingManager.CurrentMoves, questionManager.GetTargetMoves());
 
         stageTransitionPending = false;
-
+        StartCoroutine(WaitForNewStage());
+    }
+    IEnumerator WaitForNewStage()
+    {
+        yield return new WaitForSeconds(1f);
+        questionManager.TryAdvanceStage();
         uiManager.MoveConveyorUI();
         drawingManager.BeginStage();
     }

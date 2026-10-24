@@ -55,32 +55,14 @@ public class QuestionManager : MonoBehaviour
         );
     }
 
-    public (bool canAdvanced, int currentTargetMoves) TryAdvanceStage()
+    public int TryAdvanceStage()
     {
         int nextStageLevel = stageLevel + 1;
-        List<Fraction> nextQuestions;
-
-        try
-        {
-            nextQuestions = StageQuestionGenerator.Generate(nextStageLevel);
-        }
-        catch (InvalidOperationException exception)
-        {
-            Debug.LogError($"次のステージの生成に失敗しました\n{exception.Message}");
-            return (false, 0);
-        }
-        catch (ArgumentOutOfRangeException exception)
-        {
-            Debug.LogError(
-                $"出題設定を確認してください。\n{exception.Message}",
-                this
-                );
-            return (false, 0);
-        }
+        List<Fraction> nextQuestions = StageQuestionGenerator.Generate(nextStageLevel);
 
         stageLevel = nextStageLevel;
         ApplyQuestions(nextQuestions, spawnFromRight: true);
 
-        return (true, StageRules.GetTargetMovesForStage(stageLevel - 1));
+        return StageRules.GetTargetMovesForStage(stageLevel - 1);
     }
 }
