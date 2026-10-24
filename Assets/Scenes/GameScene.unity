@@ -401,7 +401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestionManager
   questionView: {fileID: 106621522}
-  stageLevel: 1
+  stageLevel: 6
 --- !u!114 &106621517
 MonoBehaviour:
   m_ObjectHideFlags: 0

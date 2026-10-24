@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 
 public class BoxManager : MonoBehaviour
 {
-    const float CharacterSpacing = 0.125f;
+    const float CharacterSpacing = 0.15f;
 
     [SerializeField] GameObject letterPrefab;
     [FormerlySerializedAs("linePrefab")]
@@ -21,12 +21,12 @@ public class BoxManager : MonoBehaviour
         var parts = fraction.FractionToString();
         if (parts.denominator == "1")
         {
-            DrawPolynomial(parts.numerator, 0f);
+            DrawPolynomial(parts.numerator, -0.1f);
             return;
         }
 
-        DrawPolynomial(parts.numerator, 0.13f);
-        DrawPolynomial(parts.denominator, -0.13f);
+        DrawPolynomial(parts.numerator, 0.05f);
+        DrawPolynomial(parts.denominator, -0.26f);
         DrawFractionBar(parts.numerator.Length, parts.denominator.Length);
     }
 
@@ -35,12 +35,13 @@ public class BoxManager : MonoBehaviour
         float barLength = Mathf.Max(numeratorLength, denominatorLength);
         LineRenderer bar = Instantiate(fractionBarPrefab, transform, false);
         bar.positionCount = 2;
-        bar.SetPosition(0, new Vector3(-barLength * CharacterSpacing / 2f, 0f, 0f));
-        bar.SetPosition(1, new Vector3(barLength * CharacterSpacing / 2f, 0f, 0f));
+        bar.SetPosition(0, new Vector3(-barLength * CharacterSpacing / 2f, -0.1f, 0f));
+        bar.SetPosition(1, new Vector3(barLength * CharacterSpacing / 2f, -0.1f, 0f));
     }
 
     void DrawPolynomial(string text, float height)
     {
+
         bool isRooted = false;
         for (int i = 0; i < text.Length; i++)
         {
@@ -48,7 +49,7 @@ public class BoxManager : MonoBehaviour
             if (character == '+' || character == '-') isRooted = false;
 
             GameObject letter = Instantiate(letterPrefab, transform, false);
-            float x = CharacterSpacing * i - (text.Length - 1) / 2 * CharacterSpacing;
+            float x = CharacterSpacing * (i - (text.Length - 1) / 2f);
             letter.transform.localPosition = new Vector3(x, height, 0f);
             letter.GetComponent<LetterController>().Init(character, isRooted);
 
