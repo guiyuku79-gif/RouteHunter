@@ -58,6 +58,11 @@ public class BoxManager : MonoBehaviour
 
     public void CloseBox()
     {
+        StartCoroutine(WaitCloseBox());
+    }
+    IEnumerator WaitCloseBox()
+    {
+        yield return new WaitForSeconds(1f);
         GetComponent<SpriteRenderer>().sprite = closedBox;
     }
 

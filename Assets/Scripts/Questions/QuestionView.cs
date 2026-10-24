@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class QuestionView : MonoBehaviour
 {
-    const float FirstBoxX = -6f;
-    const float BoxSpacing = 4f;
-    const float BoxY = 4f;
+
 
     [SerializeField] GameObject boxPrefab;
 
@@ -20,15 +18,15 @@ public class QuestionView : MonoBehaviour
 
         boxes.Clear();
 
-        for(int i = 0; i < questions.Count; i++)
+        for (int i = 0; i < questions.Count; i++)
         {
-            float targetX = FirstBoxX + BoxSpacing * i;
+            float targetX = Constants.FirstBoxX + Constants.BoxSpacing * i;
 
             float spawnX = spawnFromRight ? targetX + Constants.BoxMoveDistance : targetX;
 
             GameObject boxObject = Instantiate(
                 boxPrefab,
-                new Vector3(spawnX, BoxY, 0f),
+                new Vector3(spawnX, Constants.BoxY, 0f),
                 Quaternion.identity
             );
 

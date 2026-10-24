@@ -3763,7 +3763,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43851b10989e7149aa73050d649f5fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LineEffectManager
-  lineEffectPrefab: {fileID: 0}
+  lineEffectPrefab: {fileID: 1283137464501391778, guid: 958834f487524864da7e89a4344cc102, type: 3}
 --- !u!1 &1728056886
 GameObject:
   m_ObjectHideFlags: 0

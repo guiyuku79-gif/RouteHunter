@@ -10,6 +10,10 @@ public static class Constants
     public static readonly Vector2Int GridNumber = new Vector2Int(12, 6);
     public const float GridSize = 1f;
 
+    public const float FirstBoxX = -6f;
+    public const float BoxSpacing = 4f;
+    public const float BoxY = 4f;
+
     public enum Mode
     {
         Line,
