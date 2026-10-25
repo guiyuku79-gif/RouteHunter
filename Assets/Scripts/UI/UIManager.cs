@@ -108,7 +108,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateScoreUI(int score)
     {
-        scoreUI.text = $"Score : {score}";
+        scoreUI.text = $"得点\n<size=200%>{score}</size>";
     }
 
     public void ShowResultUI(int score)

@@ -13,14 +13,23 @@ public class TitleUIManager : MonoBehaviour
     [SerializeField] Camera camera;
 
     [SerializeField] GameObject Caption;
+    [SerializeField] GameObject tools;
+    [SerializeField] GameObject scores;
+    [SerializeField] GameObject selectedSign;
 
     void Awake()
     {
         Caption.SetActive(false);
+        tools.SetActive(false);
+        scores.SetActive(false);
+        selectedSign.SetActive(false);
     }
 
     public void RemoveTitleUI()
     {
+        tools.SetActive(true);
+        scores.SetActive(true);
+        selectedSign.SetActive(true);
         StartCoroutine(Remove());
     }
     IEnumerator Remove()
@@ -31,7 +40,7 @@ public class TitleUIManager : MonoBehaviour
 
             startButton.transform.position += Vector3.down * i * 0.1f;
             howToPlayButton.transform.position += Vector3.down * i * 0.1f;
-            titleUI.transform.position += Vector3.up * i * 10f;
+            titleUI.transform.position += Vector3.up * i * 0.1f;
         }
     }
 
@@ -46,7 +55,14 @@ public class TitleUIManager : MonoBehaviour
 
     IEnumerator ChangeCameraSize(float start, float end, bool showUI)
     {
-        if (showUI) Caption.SetActive(false);
+        if (showUI)
+        {
+            Caption.SetActive(false);
+            tools.SetActive(false);
+            scores.SetActive(false);
+            selectedSign.SetActive(false);
+        }
+
         for (int i = 1; i < 21; i++)
         {
             yield return new WaitForSeconds(0.03f);
@@ -64,6 +80,9 @@ public class TitleUIManager : MonoBehaviour
         else
         {
             Caption.SetActive(true);
+            tools.SetActive(true);
+            scores.SetActive(true);
+            selectedSign.SetActive(true);
         }
     }
 
