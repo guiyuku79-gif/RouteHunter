@@ -456,7 +456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52bf31bae62954d4fad0eb570c89ae24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStateManager
-  maxTime: 300
+  maxTime: 10
   timer: 0
 --- !u!114 &106621521
 MonoBehaviour:
@@ -523,6 +523,7 @@ MonoBehaviour:
   Caption: {fileID: 1661261821}
   tools: {fileID: 1959560503}
   scores: {fileID: 688990516}
+  selectedSign: {fileID: 37402978}
 --- !u!1 &108946432
 GameObject:
   m_ObjectHideFlags: 0

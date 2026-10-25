@@ -45,4 +45,14 @@ public class QuestionView : MonoBehaviour
     {
         boxes[questionIndex].CloseBox();
     }
+
+    public void RemoveBoxes()
+    {
+        foreach (BoxManager box in boxes)
+        {
+            box.RemoveBox();
+        }
+
+        boxes.Clear();
+    }
 }

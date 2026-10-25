@@ -65,4 +65,9 @@ public class QuestionManager : MonoBehaviour
 
         return StageRules.GetTargetMovesForStage(stageLevel - 1);
     }
+
+    public void RemoveBoxesForGameClear()
+    {
+        questionView.RemoveBoxes();
+    }
 }

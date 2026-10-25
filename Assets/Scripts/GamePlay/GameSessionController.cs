@@ -121,6 +121,8 @@ public class GameSessionController : MonoBehaviour
     void HandleTimeExpired()
     {
         drawingManager.StopInput();
+        uiManager.MoveConveyorUI();
+        questionManager.RemoveBoxesForGameClear();
         uiManager.ShowResultUI(questionManager.Score);
     }
 
