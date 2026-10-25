@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using unityroom.Api;
 
 public class GameSessionController : MonoBehaviour
 {
@@ -125,6 +126,7 @@ public class GameSessionController : MonoBehaviour
         uiManager.MoveConveyorUI();
         questionManager.RemoveBoxesForGameClear();
         uiManager.ShowResultUI(questionManager.Score);
+        UnityroomApiClient.Instance.SendScore(1, questionManager.Score, ScoreboardWriteMode.HighScoreDesc);
     }
 
     void HandleScoreChanged()
