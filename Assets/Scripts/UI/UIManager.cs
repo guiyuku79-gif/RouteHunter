@@ -116,4 +116,8 @@ public class UIManager : MonoBehaviour
         resultUI.SetActive(true);
         finalScoreUI.text = $"Score : {score}";
     }
+    public void HideResultUI()
+    {
+        resultUI.SetActive(false);
+    }
 }

@@ -22,6 +22,7 @@ public class GameSessionController : MonoBehaviour
         questionManager.Initialize();
         drawingManager.Initialize();
         gameStateManager.StartTimer();
+        uiManager.HideResultUI();
         uiManager.MoveConveyorUI();
         titleUIManager.RemoveTitleUI();
 

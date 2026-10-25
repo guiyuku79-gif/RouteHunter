@@ -14,6 +14,9 @@ public class QuestionManager : MonoBehaviour
 
     public void Initialize()
     {
+
+        stageLevel = 1; //リセット後にレベルを1に戻す
+        score = 0;
         StartStage(spawnFromRight: true);
     }
 

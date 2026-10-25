@@ -4,11 +4,11 @@ public class GameSceneManager : MonoBehaviour
 {
     public void ToGameScene()
     {
-        SceneManager.LoadScene("GameScene");
+        //SceneManager.LoadScene("GameScene");
     }
 
     public void ToTitleScene()
     {
-        SceneManager.LoadScene("TitleScene");
+        SceneManager.LoadScene("GameScene");
     }
 }

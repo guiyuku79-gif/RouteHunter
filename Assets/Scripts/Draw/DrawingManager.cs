@@ -52,6 +52,8 @@ public class DrawingManager : MonoBehaviour
         LineMode();
         currentMoves = 0;
 
+        ResetBoard();
+
         NotifyDrawingStateChanged();
     }
 
