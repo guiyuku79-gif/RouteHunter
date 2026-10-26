@@ -16,6 +16,7 @@ public class DrawingManager : MonoBehaviour
 
     bool isInputEnabled = true;
     public bool IsInputEnabled => isInputEnabled;
+    public int InputEnabledFrame { get; private set; } = -1;
 
     float fixedRadius = 0;
 
@@ -49,6 +50,7 @@ public class DrawingManager : MonoBehaviour
     public void Initialize()
     {
         isInputEnabled = true;
+        InputEnabledFrame = Time.frameCount;
         LineMode();
         currentMoves = 0;
 

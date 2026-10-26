@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(DrawingManager))]
 public class DrawingInput : MonoBehaviour
@@ -8,6 +11,7 @@ public class DrawingInput : MonoBehaviour
 
     DrawingManager drawingManager;
     Pointer drawingPointer;
+    readonly List<RaycastResult> uiHits = new List<RaycastResult>();
 
     void Awake()
     {
@@ -57,6 +61,10 @@ public class DrawingInput : MonoBehaviour
         if (!drawingManager.IsDrawing &&
             pointer.press.wasPressedThisFrame)
         {
+            // ボタンが同じフレーム内に非表示になっても、そのクリックでは描画しない。
+            if (Time.frameCount == drawingManager.InputEnabledFrame ||
+                IsOverUI(pointer.position.ReadValue())) return;
+
             drawingPointer = pointer;
             drawingManager.BeginDrawing(worldPosition);
         }
@@ -103,6 +111,23 @@ public class DrawingInput : MonoBehaviour
         {
             drawingManager.Undo();
         }
+    }
+
+    bool IsOverUI(Vector2 screenPosition)
+    {
+        EventSystem eventSystem = EventSystem.current;
+        if (eventSystem == null) return false;
+
+        // EventSystem の Update 順序に依存せず、現在のマウス・タッチ位置を調べる。
+        var eventData = new PointerEventData(eventSystem) { position = screenPosition };
+        uiHits.Clear();
+        eventSystem.RaycastAll(eventData, uiHits);
+        foreach (RaycastResult hit in uiHits)
+        {
+            if (hit.module is GraphicRaycaster) return true;
+        }
+
+        return false;
     }
 
     Vector2 ScreenToWorldPosition(Vector2 screenPosition)
