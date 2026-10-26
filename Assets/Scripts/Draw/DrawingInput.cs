@@ -97,7 +97,7 @@ public class DrawingInput : MonoBehaviour
         Keyboard keyboard = Keyboard.current;
         if (keyboard == null) return;
 
-        if (keyboard.lKey.wasPressedThisFrame)
+        if (keyboard.vKey.wasPressedThisFrame)
         {
             drawingManager.LineMode();
         }
@@ -107,9 +107,19 @@ public class DrawingInput : MonoBehaviour
             drawingManager.CompassMode();
         }
 
+        if (keyboard.fKey.wasPressedThisFrame)
+        {
+            drawingManager.FixedCompassMode();
+        }
+
         if (keyboard.zKey.wasPressedThisFrame)
         {
             drawingManager.Undo();
+        }
+
+        if (keyboard.rKey.wasPressedThisFrame)
+        {
+            drawingManager.ResetBoard();
         }
     }
 
