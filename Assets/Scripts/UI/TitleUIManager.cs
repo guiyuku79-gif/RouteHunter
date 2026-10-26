@@ -50,7 +50,7 @@ public class TitleUIManager : MonoBehaviour
         howToPlayButton.SetActive(false);
         titleUI.enabled = false;
 
-        StartCoroutine(ChangeCameraSize(5, 7, false));
+        StartCoroutine(ChangeCameraSize(5, 7.5f, false));
     }
 
     IEnumerator ChangeCameraSize(float start, float end, bool showUI)
@@ -88,7 +88,7 @@ public class TitleUIManager : MonoBehaviour
 
     public void CloseHowToPlay()
     {
-        StartCoroutine(ChangeCameraSize(7, 5, true));
+        StartCoroutine(ChangeCameraSize(7.5f, 5, true));
     }
 
 
