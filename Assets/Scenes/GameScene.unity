@@ -641,7 +641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52bf31bae62954d4fad0eb570c89ae24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStateManager
-  maxTime: 10
+  maxTime: 60
   timer: 0
 --- !u!114 &106621521
 MonoBehaviour:
@@ -8289,8 +8289,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -342.26, y: -87.24}
-  m_SizeDelta: {x: 91.08, y: 50.78}
+  m_AnchoredPosition: {x: -338.07, y: -88.32}
+  m_SizeDelta: {x: 99.46, y: 52.94}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1425790697
 MonoBehaviour:
