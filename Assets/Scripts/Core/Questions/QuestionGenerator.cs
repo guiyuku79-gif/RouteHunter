@@ -53,7 +53,14 @@ public static class QuestionGenerator
                         new Monomial(number:ChooseRootNumber(11,30),isRotted:true),
                     }
                 );
-            case 8:// √a+√b ÷ c
+            case 8:
+                return new Fraction(
+                    numerator: new List<Monomial>
+                    {
+                        new Monomial(number:ChooseRootNumber(1,15),isForthRooted:true),
+                    }
+                );
+            case 9:// √a+√b ÷ c
                 return new Fraction(
                     numerator: new List<Monomial>
                     {
