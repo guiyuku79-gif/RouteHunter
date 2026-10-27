@@ -42,21 +42,4 @@ public class Fraction
         return numeratorSum / DenominatorSum;
     }
 
-    public (float denominatorLen, float numeratorLen) ToLength()
-    {
-        float denominatorLen = 0;
-        foreach (Monomial monomial in Denominator)
-        {
-            denominatorLen += monomial.ToLength();
-        }
-        denominatorLen += Denominator.Count - 1;
-        float numeratorLen = 0;
-        foreach (Monomial monomial in Numerator)
-        {
-            numeratorLen += monomial.ToLength();
-        }
-        numeratorLen += Numerator.Count - 1;
-
-        return (denominatorLen, numeratorLen);
-    }
 }

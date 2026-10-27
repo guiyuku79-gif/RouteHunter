@@ -37,13 +37,4 @@ public class Monomial
         return Coefficient * result;
     }
 
-    public float ToLength()
-    {
-        float result = 0;
-        if (Coefficient > 0) result += Coefficient.ToString().Length;
-        if (Coefficient < 0) result += Coefficient.ToString().Length - 1;
-        if (IsRooted || IsForthRooted) result += 0.5f;
-        result += Number.ToString().Length;
-        return result;
-    }
 }
