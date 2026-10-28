@@ -4,12 +4,19 @@ public static class StageRules
 {
     public static int[] GetQuestionLevels(int stageLevel)
     {
-        if (stageLevel <= 1) return new[] { 1, 1, 2, 2 };
-        if (stageLevel <= 3) return new[] { 2, 2, 3, 3 };
-        if (stageLevel <= 4) return new[] { 2, 3, 4, 5 };
-        if (stageLevel <= 6) return new[] { 3, 4, 5, 6 };
-        if (stageLevel <= 7) return new[] { 4, 4, 6, 7 };
-        if (stageLevel <= 8) return new[] { 5, 7, 7, 8 };
+        if (stageLevel == 1) return new[] { 1, 1, 2, 2 };
+        if (stageLevel == 2) return new[] { 1, 2, 3, 3 };
+        if (stageLevel == 3) return new[] { 2, 2, 3, 4 };
+        if (stageLevel == 4) return new[] { 2, 4, 4, 5 };
+        if (stageLevel == 5) return new[] { 4, 4, 5, 6 };
+        if (stageLevel == 6) return new[] { 4, 5, 6, 7 };
+        if (stageLevel == 7) return new[] { 4, 5, 6, 7 };
+        if (stageLevel == 8) return new[] { 5, 7, 7, 8 };
+        if (stageLevel == 9) return new[] { 5, 7, 8, 9 };
+        if (stageLevel == 10) return new[] { 5, 7, 9, 9 };
+        if (stageLevel == 11) return new[] { 1, 1, 1, 1 };
+        if (stageLevel == 12) return new[] { 7, 7, 9, 10 };
+        if (stageLevel == 13) return new[] { 7, 7, 9, 10 };
 
 
         // if (stageLevel <= 1) return new[] { 1, 1, 1, 1 };
@@ -22,7 +29,7 @@ public static class StageRules
         // if (stageLevel <= 8) return new[] { 8, 8, 8, 8 };
 
 
-        return new[] { 9, 9, 9, 9 };
+        return new[] { 10, 10, 10, 10 };
     }
 
     public static int GetTargetMovesForQuestion(int questionLevel)
@@ -33,11 +40,12 @@ public static class StageRules
             case 2: return 2;
             case 3: return 2;
             case 4: return 3;
-            case 5: return 3;
+            case 5: return 4;
             case 6: return 3;
             case 7: return 3;
             case 8: return 7;
-            case 9: return 6;
+            case 9: return 7;
+            case 10: return 6;
 
             default:
                 throw new ArgumentOutOfRangeException(

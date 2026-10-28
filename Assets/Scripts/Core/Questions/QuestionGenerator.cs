@@ -33,7 +33,7 @@ public static class QuestionGenerator
                 return new Fraction(numerator: new List<Monomial>
                 {
                     new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
-                    new Monomial(number:ChooseRootNumber(1,10),isRotted:true),
+                    new Monomial(number:ChooseRootNumber(1,15),isRotted:true),
                 });
             case 6: // 1 ÷ √a
                 return new Fraction(
@@ -53,7 +53,7 @@ public static class QuestionGenerator
                         new Monomial(number:ChooseRootNumber(11,30),isRotted:true),
                     }
                 );
-            case 8:
+            case 8: //√√a
                 return new Fraction(
                     numerator: new List<Monomial>
                     {
@@ -70,6 +70,18 @@ public static class QuestionGenerator
                     denominator: new List<Monomial>
                     {
                         new Monomial(number:Random.Range(2,6),isRotted:false),
+                    }
+                );
+            case 10:// √a+√b ÷ √c
+                return new Fraction(
+                    numerator: new List<Monomial>
+                    {
+                        new Monomial(number:ChooseRootNumber(1,30),isRotted:true),
+                        new Monomial(number:ChooseRootNumber(1,30),isRotted:true),
+                    },
+                    denominator: new List<Monomial>
+                    {
+                        new Monomial(number:Random.Range(2,6),isRotted:true),
                     }
                 );
 
