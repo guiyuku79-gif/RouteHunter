@@ -81,7 +81,7 @@ public static class QuestionGenerator
                     },
                     denominator: new List<Monomial>
                     {
-                        new Monomial(number:Random.Range(2,5),isRotted:true),
+                        new Monomial(number:ChooseRootNumber(2,5),isRotted:true),
                     }
                 );
 

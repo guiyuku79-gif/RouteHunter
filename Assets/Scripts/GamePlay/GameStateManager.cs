@@ -17,6 +17,10 @@ public class GameStateManager : MonoBehaviour
 
     public void StartTimer()
     {
+        StopAllCoroutines();
+
+        timeCount = 0f;
+        
         timer = maxTime;
         isTimerMoved = true;
         TimeChanged?.Invoke(timer);
@@ -30,7 +34,7 @@ public class GameStateManager : MonoBehaviour
         timeCount += Time.deltaTime;
         if (timeCount >= 1f)
         {
-            timeCount = 0;
+            timeCount -= 1;
             timer--;
             TimeChanged?.Invoke(timer);
         }

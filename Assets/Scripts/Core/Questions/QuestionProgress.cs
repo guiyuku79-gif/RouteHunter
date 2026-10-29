@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class QuestionProgress
 {
-    const float AnswerTolerance = 0.005f;
+    public const float AnswerTolerance = 0.005f;
 
     private readonly List<Fraction> questions = new();
     private bool[] solved = Array.Empty<bool>();
@@ -31,6 +31,7 @@ public class QuestionProgress
 
             solved[i] = true;
             solvedIndices.Add(i);
+            break;
         }
 
         bool stageCompleted = solvedIndices.Count > 0 && AllQuestionsSolved();

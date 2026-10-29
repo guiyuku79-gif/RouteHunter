@@ -33,7 +33,9 @@ public static class StageQuestionGenerator
 
                 if (value <= 0.1f || value >= 10f) continue;
 
-                if (previousValues.Contains(value)) continue;
+                bool overlaps = previousValues.Exists(previous => Math.Abs(previous - value) <= 2f * QuestionProgress.AnswerTolerance);
+
+                if (overlaps) continue;
 
                 result.Add(question);
                 previousValues.Add(value);
