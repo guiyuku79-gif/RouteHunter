@@ -12,7 +12,7 @@ public class LineEffectController : MonoBehaviour
     }
     public void Init(LineData lineData, int boxIndex)
     {
-        StartCoroutine(MoveToBox(lineData, boxIndex, 0.7f, 0.3f, 15));
+        StartCoroutine(MoveToBox(lineData, boxIndex, 0.65f, 0.2f, 12));
     }
 
     IEnumerator MoveToBox(LineData lineData, int boxIndex, float Movetime, float closeTime, float division)
