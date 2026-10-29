@@ -1,13 +1,14 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TitleUIManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI titleUI;
-    [SerializeField] GameObject startButton;
-    [SerializeField] GameObject howToPlayButton;
-    [SerializeField] GameObject returnTitleButton;
+    [SerializeField] Button gameStartButton;
+    [SerializeField] Button howToPlayButton;
+    [SerializeField] Button returnTitleButton;
     [SerializeField] Camera camera;
 
     [SerializeField] GameObject Caption;
@@ -19,6 +20,7 @@ public class TitleUIManager : MonoBehaviour
     {
         Caption.SetActive(false);
         tools.SetActive(false);
+        returnTitleButton.gameObject.SetActive(false);
         scores.SetActive(false);
         selectedSign.SetActive(false);
     }
@@ -32,11 +34,13 @@ public class TitleUIManager : MonoBehaviour
     }
     IEnumerator Remove()
     {
+        gameStartButton.interactable = false;
+        howToPlayButton.interactable = false;
         for (int i = 0; i < 20; i++)
         {
             yield return new WaitForSeconds(0.05f);
 
-            startButton.transform.position += Vector3.down * i * 0.1f;
+            gameStartButton.transform.position += Vector3.down * i * 0.1f;
             howToPlayButton.transform.position += Vector3.down * i * 0.1f;
             titleUI.transform.position += Vector3.up * i * 0.1f;
         }
@@ -44,8 +48,8 @@ public class TitleUIManager : MonoBehaviour
 
     public void ShowHowToPlay()
     {
-        startButton.SetActive(false);
-        howToPlayButton.SetActive(false);
+        gameStartButton.gameObject.SetActive(false);
+        howToPlayButton.gameObject.SetActive(false);
         titleUI.enabled = false;
 
         StartCoroutine(ChangeCameraSize(5, 7.5f, false));
@@ -56,6 +60,7 @@ public class TitleUIManager : MonoBehaviour
         if (showUI)
         {
             Caption.SetActive(false);
+            returnTitleButton.gameObject.SetActive(false);
             tools.SetActive(false);
             scores.SetActive(false);
             selectedSign.SetActive(false);
@@ -70,13 +75,14 @@ public class TitleUIManager : MonoBehaviour
 
         if (showUI)
         {
-            startButton.SetActive(true);
-            howToPlayButton.SetActive(true);
+            gameStartButton.gameObject.SetActive(true);
+            howToPlayButton.gameObject.SetActive(true);
             titleUI.enabled = true;
 
         }
         else
         {
+            returnTitleButton.gameObject.SetActive(true);
             Caption.SetActive(true);
             tools.SetActive(true);
             scores.SetActive(true);

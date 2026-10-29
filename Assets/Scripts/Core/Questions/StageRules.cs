@@ -45,7 +45,7 @@ public static class StageRules
             case 7: return 3;
             case 8: return 7;
             case 9: return 7;
-            case 10: return 6;
+            case 10: return 7;
 
             default:
                 throw new ArgumentOutOfRangeException(
