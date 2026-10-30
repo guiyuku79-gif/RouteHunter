@@ -17,6 +17,8 @@ public static class StageRules
         if (stageLevel == 11) return new[] { 1, 1, 1, 1 };
         if (stageLevel == 12) return new[] { 7, 7, 9, 10 };
         if (stageLevel == 13) return new[] { 7, 7, 9, 10 };
+        if (stageLevel == 14) return new[] { 8, 9, 10, 10 };
+        if (stageLevel == 15) return new[] { 8, 9, 10, 10 };
 
 
         // if (stageLevel <= 1) return new[] { 1, 1, 1, 1 };
@@ -43,9 +45,10 @@ public static class StageRules
             case 5: return 4;
             case 6: return 3;
             case 7: return 3;
-            case 8: return 7;
-            case 9: return 7;
-            case 10: return 6;
+            case 8: return 5;
+            case 9: return 6;
+            case 10: return 5;
+            case 11: return 4;
 
             default:
                 throw new ArgumentOutOfRangeException(

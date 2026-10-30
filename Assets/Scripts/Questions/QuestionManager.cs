@@ -11,12 +11,14 @@ public class QuestionManager : MonoBehaviour
     public int Score => score;
 
     private readonly QuestionProgress progress = new();
+    private List<Fraction> currentQuestions;
 
     public void Initialize()
     {
 
         stageLevel = 1; //リセット後にレベルを1に戻す
         score = 0;
+        currentQuestions = null;
         StartStage(spawnFromRight: true);
     }
 
@@ -30,6 +32,7 @@ public class QuestionManager : MonoBehaviour
     {
         progress.SetQuestions(nextQuestions);
         questionView.ShowQuestions(nextQuestions, spawnFromRight);
+        currentQuestions = nextQuestions;
 
     }
 
@@ -61,7 +64,7 @@ public class QuestionManager : MonoBehaviour
     public int TryAdvanceStage()
     {
         int nextStageLevel = stageLevel + 1;
-        List<Fraction> nextQuestions = StageQuestionGenerator.Generate(nextStageLevel);
+        List<Fraction> nextQuestions = StageQuestionGenerator.Generate(nextStageLevel, currentQuestions);
 
         stageLevel = nextStageLevel;
         ApplyQuestions(nextQuestions, spawnFromRight: true);

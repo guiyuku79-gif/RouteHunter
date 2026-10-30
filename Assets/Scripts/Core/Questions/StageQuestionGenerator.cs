@@ -6,7 +6,7 @@ public static class StageQuestionGenerator
     const int QuestionsPerStage = 4;
     const int MaxGenerationAttempts = 1000;
 
-    public static List<Fraction> Generate(int stageLevel)
+    public static List<Fraction> Generate(int stageLevel, IReadOnlyList<Fraction> previousQuestions = null)
     {
         int[] levels = StageRules.GetQuestionLevels(stageLevel);
 
@@ -19,6 +19,15 @@ public static class StageQuestionGenerator
 
         List<Fraction> result = new(QuestionsPerStage);
         List<float> previousValues = new(QuestionsPerStage);
+
+        // 直前のフェーズと同じ値は、表記が異なる場合も候補から除外する。
+        if (previousQuestions != null)
+        {
+            foreach (Fraction question in previousQuestions)
+            {
+                previousValues.Add(question.ToFloat());
+            }
+        }
 
         foreach (int level in levels)
         {
